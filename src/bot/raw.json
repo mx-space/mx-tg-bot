@@ -1,0 +1,19 @@
+{
+  "update_id": 831527949,
+  "message": {
+    "message_id": 785,
+    "from": {
+      "id": 1996983708,
+      "is_bot": false,
+      "first_name": "wibus",
+      "username": "wibus_wee"
+    },
+    "chat": {
+      "id": -1001570490524,
+      "title": "\u304a\u53ef\u611b\u3044\u3053\u3068\u3002",
+      "type": "supergroup"
+    },
+    "date": 1690032393,
+    "text": "\u7fa1\u6155"
+  }
+}

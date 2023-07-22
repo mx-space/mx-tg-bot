@@ -10,14 +10,19 @@ const logger = new Consola({
   reporters: [new FancyReporter()],
   level: isDev ? LogLevel.Verbose : LogLevel.Info,
 });
+
 export const registerLogger = () => {
   logger.wrapAll();
-  (global as any).consola = logger;
 };
-export { logger as consola };
+
+export { logger };
+
 class NameSpaceReporter extends FancyReporter {
   private color: string;
-  constructor(public namespace: string, options?: FancyReporterOptions) {
+  constructor(
+    public namespace: string,
+    options?: FancyReporterOptions,
+  ) {
     super(options);
 
     this.color = rc({
@@ -32,7 +37,7 @@ class NameSpaceReporter extends FancyReporter {
   protected formatLogObj(): string {
     const prefix = `${chalk.hex(this.color)(this.namespace)}: `;
     return `${chalk.yellow(
-      getShortTime(new Date())
+      getShortTime(new Date()),
       // @ts-ignore
       // eslint-disable-next-line prefer-rest-params
     )} ${prefix}${super.formatLogObj.apply(this, arguments)}`.trimEnd();
