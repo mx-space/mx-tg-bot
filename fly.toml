@@ -1,0 +1,56 @@
+# fly.toml app configuration file generated for fastify-starter on 2023-07-19T23:25:24+08:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "fastify-starter"
+primary_region = "sin"
+kill_signal = "SIGINT"
+kill_timeout = "5s"
+
+[experimental]
+  auto_rollback = true
+
+[deploy]
+  strategy = "bluegreen"
+
+[build]
+  builder = "paketobuildpacks/builder:base"
+  buildpacks = ["gcr.io/paketo-buildpacks/nodejs"]
+
+[env]
+  NODE_ENV = "staging"
+  PORT = "8888"
+  SERVER_HOSTNAME = "0.0.0.0"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8888
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "1s"
+    restart_limit = 0
+
+  [[services.http_checks]]
+    interval = "10s"
+    timeout = "2s"
+    grace_period = "5s"
+    restart_limit = 0
+    method = "get"
+    path = "/health/check"
+    protocol = "http"

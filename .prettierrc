@@ -1,0 +1,12 @@
+{
+  "importOrder": [
+    "^@fastify/(.*)$",
+    "^@opentelemetry/(.*)$",
+    "^@core/(.*)$",
+    "^@server/(.*)$",
+    "^@ui/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}
