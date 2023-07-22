@@ -7,10 +7,13 @@ import Fastify from "fastify";
 // Read the .env file.
 dotenv.config();
 
-const isProduction = process.env.NODE_ENV === "production";
 // Instantiate Fastify with some config
 const app = Fastify({
-  logger: !isProduction,
+  logger: {
+    transport: {
+      target: "@fastify/one-line-logger",
+    },
+  },
 });
 
 // Register your application as a normal plugin.

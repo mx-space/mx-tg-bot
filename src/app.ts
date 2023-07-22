@@ -5,6 +5,7 @@ import { join } from "path";
 import type { AutoloadPluginOptions } from "@fastify/autoload";
 import AutoLoad from "@fastify/autoload";
 
+import { initTgBot } from "./bot";
 export type AppOptions = {
   // Place your custom options for app below here.
 } & Partial<AutoloadPluginOptions>;
@@ -15,6 +16,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
 ): Promise<void> => {
   // Place here your custom code!
 
+  initTgBot();
   // Do not touch the following lines
 
   // This loads all plugins defined in plugins
@@ -34,4 +36,3 @@ const app: FastifyPluginAsync<AppOptions> = async (
 };
 
 export default app;
-export { app };
