@@ -13,7 +13,7 @@ import { handleEvent } from './event-handler'
 const logger = createNamespaceLogger('mx-socket')
 
 export function createMxSocket(ctx: ModuleContext): Socket<any, any> {
-  const mxSocket = io(appConfig.mxSpace?.gateway, {
+  const mxSocket = io(appConfig.mxSpace.gateway, {
     transports: ['websocket'],
     timeout: 10000,
     forceNew: true,

@@ -4,6 +4,8 @@ const envSchema = z.object({
   MX_SPACE_TOKEN: z.string(),
   TG_BOT_TOKEN: z.string(),
   GH_WEBHOOK_SECRET: z.string(),
+  MX_SPACE_API_ENDPOINT: z.string().url(),
+  MX_SPACE_GATEWAY_ENDPOINT: z.string().url(),
 })
 
 console.log('env validating...')
@@ -11,8 +13,8 @@ const env = envSchema.parse(process.env)
 
 export const appConfig = {
   mxSpace: {
-    apiEndpoint: 'https://api.innei.ren/v2',
-    gateway: 'https://api.innei.ren/system',
+    apiEndpoint: env.MX_SPACE_API_ENDPOINT,
+    gateway: env.MX_SPACE_GATEWAY_ENDPOINT,
     // gateway: 'http://127.0.0.1:2333/system',
     token: env.MX_SPACE_TOKEN,
 
