@@ -1,43 +1,126 @@
-import type TelegramBot from "node-telegram-bot-api";
+import { marked } from 'marked'
+import type { Context, NarrowedContext, Telegraf } from 'telegraf'
+import type {
+  BotCommand,
+  Message,
+  Update,
+} from 'telegraf/typings/core/types/typegram'
 
+import { tgBot } from '~/bot'
+
+interface ICommand {
+  command: string
+  description: string
+  usage?: string
+  group?: string
+}
+const commandMap = {} as Record<string, ICommand>
+
+export const gerenateTGBotCommandsUsageDoc = async () => {
+  const me = await tgBot.telegram.getMe()
+  let doc = `*${me.first_name}の使用方法` + '\n\n'
+
+  const groups = {} as Record<string, ICommand[]>
+  for (const cmd of Object.values(commandMap)) {
+    const { group = 'default' } = cmd
+
+    if (!groups[group]) {
+      groups[group] = []
+    }
+    groups[group].push(cmd)
+  }
+
+  for (const [group, cmds] of Object.entries(groups)) {
+    if (group === 'default') {
+      doc += '\n'
+    } else {
+      doc += `*${group}*\n`
+    }
+    for (const cmd of cmds) {
+      const { command, description, usage } = cmd
+      doc += `/${command} - ${description}\n`
+      if (usage) {
+        doc += `食用方法: ${usage}\n`
+      }
+    }
+    doc += '\n'
+  }
+
+  return marked.parseInline(doc, {
+    gfm: true,
+    headerIds: false,
+    mangle: false,
+  })
+}
 export async function setTGBotCommands(
-  tgBot: TelegramBot,
-  commands: (TelegramBot.BotCommand & {
+  tgBot: Telegraf,
+  commands: (BotCommand & {
+    usage?: string
+    group?: string
     handler: (
       cmdLine: string,
-      msg: TelegramBot.Message,
+      ctx: NarrowedContext<
+        Context<Update>,
+        {
+          message: Update.New & Update.NonChannel & Message.TextMessage
+          update_id: number
+        }
+      >,
     ) =>
       | void
       | Promise<void>
       | boolean
       | Promise<boolean>
       | Promise<string>
-      | string;
+      | string
+      | undefined
+      | null
+      | Promise<undefined | null | string>
   })[],
-) {
-  await tgBot.setMyCommands(commands);
-  tgBot.on("text", async (msg) => {
-    const senderMsg = msg.text;
 
-    if (!senderMsg) return;
+  options: {
+    replyPrefix?: string | (() => Promise<string>) | (() => string)
+  } = {},
+) {
+  const { replyPrefix = '' } = options
+  await tgBot.telegram.setMyCommands(commands)
+
+  for (const cmd of commands) {
+    const { command } = cmd
+    commandMap[command] = cmd
+  }
+
+  tgBot.on('text', async (ctx) => {
+    const senderMsg = ctx.message.text
+
+    if (!senderMsg) return
 
     for await (const cmd of commands) {
-      const { command, handler } = cmd;
+      const { command, handler } = cmd
 
-      const matchedCommand = `/${command}`;
-      const isMatch = senderMsg.startsWith(matchedCommand);
+      const matchedCommand = `/${command}`
+      const isMatch = senderMsg.startsWith(matchedCommand)
 
-      if (!isMatch) continue;
+      if (!isMatch) continue
 
-      const cmdLine = senderMsg.slice(matchedCommand.length).trim();
+      const cmdLine = senderMsg.slice(matchedCommand.length).trim()
 
-      const handled = await handler(cmdLine, msg);
-      if (handled === true) break;
+      const handled = await handler(cmdLine, ctx)
+      if (handled === true) break
 
-      if (typeof handled === "string") {
-        await tgBot.sendMessage(msg.chat.id, handled);
-        break;
+      if (typeof handled === 'string' && handled) {
+        let nextPrefix = ''
+        if (typeof replyPrefix === 'function') {
+          nextPrefix = await replyPrefix()
+        } else {
+          nextPrefix = replyPrefix
+        }
+
+        await ctx.sendMessage(nextPrefix + handled, {
+          parse_mode: 'MarkdownV2',
+        })
+        break
       }
     }
-  });
+  })
 }

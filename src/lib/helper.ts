@@ -1,3 +1,28 @@
-export const escapeMarkdownV2 = (text: string) => {
-  return text.replace(/[-.]/g, "\\$&");
-};
+const SPECIAL_CHARS = [
+  '\\',
+  '_',
+  '*',
+  '[',
+  ']',
+  '(',
+  ')',
+  '~',
+  '`',
+  '>',
+  '<',
+  '&',
+  '#',
+  '+',
+  '-',
+  '=',
+  '|',
+  '{',
+  '}',
+  '.',
+  '!',
+]
+
+export const escapeMarkdown = (text: string) => {
+  SPECIAL_CHARS.forEach((char) => (text = text.replaceAll(char, `\\${char}`)))
+  return text
+}

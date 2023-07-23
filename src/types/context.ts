@@ -1,11 +1,12 @@
+import { IncomingMessage, ServerResponse } from 'http'
 import {
-  FastifyInstance,
-  RawServerDefault,
   FastifyBaseLogger,
+  FastifyInstance,
   FastifyTypeProviderDefault,
-} from "fastify";
-import { IncomingMessage, ServerResponse } from "http";
-import TelegramBot from "node-telegram-bot-api";
+  RawServerDefault,
+} from 'fastify'
+import TelegramBot from 'node-telegram-bot-api'
+import { Telegraf } from 'telegraf'
 
 export interface ModuleContext {
   server: FastifyInstance<
@@ -14,7 +15,7 @@ export interface ModuleContext {
     ServerResponse<IncomingMessage>,
     FastifyBaseLogger,
     FastifyTypeProviderDefault
-  >;
+  >
 
-  tgBot: TelegramBot;
+  tgBot: Telegraf
 }

@@ -1,19 +1,40 @@
 /* eslint-disable import/no-mutable-exports */
 
-import TelegramBot from "node-telegram-bot-api";
-import { appConfig } from "../app.config";
-import { createNamespaceLogger } from "~/lib/logger";
+import { Telegraf } from 'telegraf'
 
-const { bot } = appConfig;
+import { createNamespaceLogger } from '~/lib/logger'
+import { gerenateTGBotCommandsUsageDoc } from '~/lib/register-command'
 
-let tgBot: TelegramBot;
+import { appConfig } from '../app.config'
 
-function initTgBot() {
-  const logger = createNamespaceLogger("Telegram Bot");
-  tgBot = new TelegramBot(bot.token, { polling: true });
+const { bot } = appConfig
 
-  logger.info("Ready!");
+let tgBot: Telegraf
 
-  return tgBot;
+async function initTgBot(): Promise<Telegraf> {
+  const logger = createNamespaceLogger('Telegram Bot')
+
+  tgBot = new Telegraf(bot.token)
+
+  tgBot.start((ctx) => {
+    ctx.reply('Hi')
+  })
+
+  tgBot.launch()
+
+  logger.info('Ready!')
+
+  await tgBot.telegram.setMyCommands([
+    {
+      command: 'help',
+      description: 'Get help',
+    },
+  ])
+  tgBot.command('help', async (ctx) => {
+    ctx.reply(await gerenateTGBotCommandsUsageDoc(), {
+      parse_mode: 'HTML',
+    })
+  })
+  return tgBot
 }
-export { tgBot, initTgBot };
+export { tgBot, initTgBot }
