@@ -71,4 +71,4 @@ dist
 # Eslint cache
 .eslintcache
 
-app.config.ts
+# app.config.ts

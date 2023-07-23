@@ -86,9 +86,6 @@ dependencies:
   fastify-tsconfig:
     specifier: 1.0.1
     version: 1.0.1
-  fastify-webhook:
-    specifier: 4.0.1
-    version: 4.0.1
   github-webhook-handler:
     specifier: 1.0.0
     version: 1.0.0
@@ -2558,13 +2555,6 @@ packages:
   /fastify-tsconfig@1.0.1:
     resolution: {integrity: sha512-BXkTG3JYcjJb3xX5R5FcE9ciscV/h7YtmnkiSaNAONd1g6ooMSN/4GWfhA8hnS6SRZFYBBxsn8719Mj9lbCOtA==}
     engines: {node: '>=10.4.0'}
-    dev: false
-
-  /fastify-webhook@4.0.1:
-    resolution: {integrity: sha512-5cluhE8gYrp6SmpUiE78LgQ497n9YfTq81Qg3NO8Ws3W21hSynIc1yAwXinn0UVPqHb1jbnjL+7bbxd6XjUPxw==}
-    engines: {node: '>=14.15.0'}
-    dependencies:
-      fastify-plugin: 4.5.1
     dev: false
 
   /fastify@4.20.0:
