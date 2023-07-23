@@ -48,7 +48,8 @@
     "socket.io-client": "4.7.1",
     "telegraf": "4.12.2",
     "tsconfig-paths": "4.2.0",
-    "zod": "3.21.4"
+    "zod": "3.21.4",
+    "husky": "8.0.3"
   },
   "devDependencies": {
     "@innei/eslint-config-ts": "0.11.1",
@@ -63,7 +64,6 @@
     "cross-env": "7.0.3",
     "eslint": "8.45.0",
     "fast-json-stringify": "5.7.0",
-    "husky": "8.0.3",
     "lint-staged": "13.2.3",
     "prettier": "3.0.0",
     "ts-node": "10.9.1",

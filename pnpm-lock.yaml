@@ -77,6 +77,9 @@ dependencies:
   github-webhook-handler:
     specifier: 1.0.0
     version: 1.0.0
+  husky:
+    specifier: 8.0.3
+    version: 8.0.3
   lodash:
     specifier: 4.17.21
     version: 4.17.21
@@ -139,9 +142,6 @@ devDependencies:
   fast-json-stringify:
     specifier: 5.7.0
     version: 5.7.0
-  husky:
-    specifier: 8.0.3
-    version: 8.0.3
   lint-staged:
     specifier: 13.2.3
     version: 13.2.3
@@ -2663,7 +2663,7 @@ packages:
     resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
     engines: {node: '>=14'}
     hasBin: true
-    dev: true
+    dev: false
 
   /ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
