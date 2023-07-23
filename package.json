@@ -1,15 +1,15 @@
 {
   "license": "MIT",
   "scripts": {
-    "build": "tsup",
-    "build:ts": "tsup --env.NODE_ENV production",
+    "build": "tsc",
+    "build:ts": "tsc",
     "dev": "npm run dev:watch",
     "dev:watch": "NODE_ENV=development tsx watch src/server.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "prepare": "husky install",
     "start": "tsx src/server.ts",
-    "start:prod": "node dist/server.js",
+    "start:prod": "NODE_ENV=production TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./dist/src/server.js",
     "typecheck": "tsc -b"
   },
   "lint-staged": {
@@ -29,11 +29,6 @@
     "@innei/next-async": "0.3.0",
     "@mx-space/api-client": "1.4.3",
     "@tanstack/query-core": "4.32.0",
-    "@types/cron": "2.0.1",
-    "@types/lodash": "4.14.195",
-    "@types/marked": "5.0.1",
-    "@types/randomcolor": "0.5.7",
-    "@types/remove-markdown": "0.3.1",
     "axios": "1.4.0",
     "chalk": "4.1.2",
     "close-with-grace": "1.2.0",
@@ -52,13 +47,19 @@
     "remove-markdown": "0.5.0",
     "socket.io-client": "4.7.1",
     "telegraf": "4.12.2",
+    "tsconfig-paths": "4.2.0",
     "zod": "3.21.4"
   },
   "devDependencies": {
     "@innei/eslint-config-ts": "0.11.1",
     "@innei/prettier": "0.11.1",
+    "@types/cron": "2.0.1",
+    "@types/lodash": "4.14.195",
+    "@types/marked": "5.0.1",
     "@types/node": "20.4.4",
     "@types/node-telegram-bot-api": "0.61.6",
+    "@types/randomcolor": "0.5.7",
+    "@types/remove-markdown": "0.3.1",
     "cross-env": "7.0.3",
     "eslint": "8.45.0",
     "fast-json-stringify": "5.7.0",
@@ -66,7 +67,6 @@
     "lint-staged": "13.2.3",
     "prettier": "3.0.0",
     "ts-node": "10.9.1",
-    "tsup": "7.1.0",
     "tsx": "3.12.7",
     "typescript": "5.1.6"
   },

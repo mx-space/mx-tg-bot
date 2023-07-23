@@ -52,18 +52,14 @@ export function createMxSocket(ctx: ModuleContext): Socket<any, any> {
     'message',
     (payload: string | Record<'type' | 'data' | 'code', any>) => {
       if (typeof payload !== 'string') {
-        return handleEvent(ctx)(
-          payload.type,
-          simpleCamelcaseKeys(payload.data),
-          payload.code,
-        )
+        return handleEvent(ctx)(payload.type, simpleCamelcaseKeys(payload.data))
       }
-      const { data, type, code } = JSON.parse(payload) as {
+      const { data, type } = JSON.parse(payload) as {
         data: any
         type: MxSocketEventTypes
         code?: number
       }
-      handleEvent(ctx)(type, simpleCamelcaseKeys(data), code)
+      handleEvent(ctx)(type, simpleCamelcaseKeys(data))
     },
   )
 

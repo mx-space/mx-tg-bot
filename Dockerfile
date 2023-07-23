@@ -20,6 +20,9 @@ FROM jellydn/alpine-nodejs:20
 WORKDIR /app
 COPY --from=builder /app .
 
+RUN npm i -g pnpm
+ENV NODE_ENV=production
+RUN pnpm install --frozen-lockfile --prefer-frozen-lockfile
 # Export 8888 for health check with fly.io
 EXPOSE 8888
 EXPOSE 8080
