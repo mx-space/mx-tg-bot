@@ -5,13 +5,15 @@ import type { PluginFunction } from '~/lib/plugin'
 import type { BLRoom } from './types/room'
 import type { BLUser } from './types/user'
 
-import { userAgent } from '~/constants'
+import { isDev, userAgent } from '~/constants'
 
 const headers = {
   referer: `https://link.bilibili.com/p/center/index?visit_id=22ast2mb9zhc`,
   'User-Agent': userAgent,
 }
+
 export const register: PluginFunction = (ctx) => {
+  if (isDev) return
   let playStatus = false
   const config = appConfig.bilibili
 
