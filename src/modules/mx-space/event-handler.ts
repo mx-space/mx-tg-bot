@@ -293,8 +293,8 @@ export const handleEvent =
   }
 
 const getSimplePreview = (text: string) => {
-  const _text = rmd(text) as string
-  return _text.length > 200 ? `${_text.slice(0, 200)}...` : _text
+  const rawText = rmd(text) as string
+  return rawText.length > 200 ? `${rawText.slice(0, 200)}...` : rawText
 }
 
 function checkNoteIsSecret(note: NoteModel) {
