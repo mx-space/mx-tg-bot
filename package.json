@@ -40,6 +40,7 @@
     "consola": "2.15.3",
     "cron": "2.3.1",
     "dayjs": "1.11.9",
+    "dotenv": "16.3.1",
     "fastify": "4.20.0",
     "fastify-cli": "5.7.1",
     "fastify-plugin": "4.5.1",
@@ -84,7 +85,6 @@
       "esm"
     ],
     "legacyOutput": true,
-    "target": "es2018",
-    "onSuccess": "npm run copy:assets"
+    "target": "es2018"
   }
 }
