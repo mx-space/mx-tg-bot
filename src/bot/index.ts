@@ -25,6 +25,7 @@ async function initTgBot(): Promise<Telegraf> {
   logger.info('Ready!')
 
   await tgBot.telegram.setMyCommands([
+    ...(await tgBot.telegram.getMyCommands()),
     {
       command: 'help',
       description: 'Get help',

@@ -83,7 +83,9 @@ export async function setTGBotCommands(
   } = {},
 ) {
   const { replyPrefix = '' } = options
-  await tgBot.telegram.setMyCommands(commands)
+  await tgBot.telegram.setMyCommands(
+    await tgBot.telegram.getMyCommands().then((res) => res.concat(commands)),
+  )
 
   for (const cmd of commands) {
     const { command } = cmd
