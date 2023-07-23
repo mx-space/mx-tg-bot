@@ -13,10 +13,14 @@ import { relativeTimeFromNow } from '~/lib/time'
 import { apiClient } from './api-client'
 import { fetchHitokoto } from './api/hitokoto'
 import { getMxSpaceAggregateData } from './data'
+import { createMxSocket } from './socket'
 import { urlBuilder } from './utils'
 
 export const register: PluginFunction = async (ctx) => {
   const { tgBot } = ctx
+
+  const socket = createMxSocket(ctx)
+  socket.connect()
   await Promise.all([
     bindEvents(tgBot),
     bindCommands(tgBot),
