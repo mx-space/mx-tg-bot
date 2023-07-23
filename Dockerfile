@@ -8,6 +8,7 @@ RUN apk upgrade --no-cache -U && \
 
 COPY package.json pnpm-lock.yaml tsconfig.json ./
 COPY src src
+COPY app.config.ts app.config.ts
 
 RUN npm i -g pnpm
 RUN pnpm install --frozen-lockfile --prefer-frozen-lockfile
