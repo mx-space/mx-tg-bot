@@ -48,6 +48,12 @@ export function createMxSocket(ctx: ModuleContext): Socket<any, any> {
     let timer: any = setInterval(tryReconnect, 2000)
   })
 
+  mxSocket.on('connect_error', () => {
+    setTimeout(() => {
+      mxSocket.connect()
+    }, 1000)
+  })
+
   mxSocket.on(
     'message',
     (payload: string | Record<'type' | 'data' | 'code', any>) => {
