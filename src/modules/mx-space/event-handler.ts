@@ -10,11 +10,13 @@ import type {
   RecentlyModel,
   SayModel,
 } from '@mx-space/api-client'
+import type { Sendable } from '~/lib/sendable'
 import type { ModuleContext } from '~/types/context'
 
 import { LinkState } from '@mx-space/api-client'
 
 import { createNamespaceLogger } from '~/lib/logger'
+import { createSendMessageInstance } from '~/lib/sendable'
 import { getShortDateTime, relativeTimeFromNow } from '~/lib/time'
 
 import { apiClient } from './api-client'
@@ -27,21 +29,6 @@ import { urlBuilder } from './utils'
 
 const logger = createNamespaceLogger('mx-event')
 
-interface TextMessage {
-  type: 'text' | 'Markdown' | 'HTML' | 'MarkdownV2'
-  content: string
-}
-
-interface MediaMessage {
-  type: 'photo'
-  url: string[]
-
-  caption?: string
-}
-
-type IMessage = TextMessage | MediaMessage
-type Sendable = string | IMessage[]
-
 export const handleEvent =
   (ctx: ModuleContext) =>
   async (type: MxSocketEventTypes | MxSystemEventBusEvents, payload: any) => {
@@ -51,40 +38,10 @@ export const handleEvent =
     const owner = aggregateData.user
     const sendToGroup = async (message: Sendable) => {
       const { watchGroupIds } = appConfig.mxSpace
-
+      const sender = createSendMessageInstance(ctx.tgBot)
       return await Promise.all(
         watchGroupIds.map((id) => {
-          if (message instanceof Array) {
-            for (const msg of message) {
-              switch (msg.type) {
-                case 'text':
-                  ctx.tgBot.telegram.sendMessage(id, msg.content)
-                  continue
-                case 'HTML':
-                case 'Markdown':
-                case 'MarkdownV2':
-                  ctx.tgBot.telegram.sendMessage(id, msg.content, {
-                    parse_mode: msg.type,
-                  })
-                  continue
-
-                case 'photo': {
-                  const { url, caption = '' } = msg
-                  ctx.tgBot.telegram.sendMediaGroup(
-                    id,
-                    url.map((u, i) => {
-                      return {
-                        type: 'photo',
-                        media: u,
-                        caption: i === 0 ? caption : undefined,
-                      }
-                    }),
-                  )
-                  break
-                }
-              }
-            }
-          } else return ctx.tgBot.telegram.sendMessage(id, message)
+          sender(id, message)
         }),
       )
     }
@@ -117,8 +74,18 @@ export const handleEvent =
           owner.name
         } ${publishDescription}: ${title}\n\n${simplePreview}\n\n${
           summary ? `${summary}\n\n` : ''
-        }前往阅读：${url}`
-        await sendToGroup(message)
+        }`
+        await sendToGroup([
+          {
+            type: 'text',
+            content: message,
+          },
+          {
+            type: 'url',
+            url,
+            label: '前往阅读',
+          },
+        ])
 
         return
       }

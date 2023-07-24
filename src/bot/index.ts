@@ -31,11 +31,21 @@ async function initTgBot(): Promise<Telegraf> {
       description: 'Get help',
     },
   ])
+
   tgBot.command('help', async (ctx) => {
     ctx.reply(await gerenateTGBotCommandsUsageDoc(), {
       parse_mode: 'HTML',
     })
   })
+
+  // tgBot.command('test', (ctx) => {
+  //   createSendMessageInstance(tgBot)(ctx.chat.id, [
+  //     {
+  //       type: 'text',
+  //       content: 'aaaa',
+  //     },
+  //   ])
+  // })
 
   // Enable graceful stop
   process.once('SIGINT', () => tgBot.stop('SIGINT'))

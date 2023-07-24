@@ -21,6 +21,7 @@ export const register: PluginFunction = async (ctx) => {
   const { tgBot } = ctx
 
   const socket = createMxSocket(ctx)
+
   socket.connect()
   await Promise.all([
     bindEvents(tgBot),
@@ -103,7 +104,6 @@ async function bindCommands(tgBot: Telegraf) {
             }
           }
 
-          console.debug(markup)
           return markup
         },
       },
