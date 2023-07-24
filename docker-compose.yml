@@ -1,14 +1,14 @@
-version: "3.8"
+version: '3.8'
 
 services:
   reverse-proxy:
     image: traefik:v2.10
     command:
-      - "--api.insecure=true"
-      - "--providers.docker"
+      - '--api.insecure=true'
+      - '--providers.docker'
     ports:
-      - "80:80" # The HTTP port
-      - "8081:8080" # The Web UI (enabled by --api.insecure=true)
+      - '80:80' # The HTTP port
+      - '8081:8080' # The Web UI (enabled by --api.insecure=true)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
 
@@ -17,9 +17,10 @@ services:
       context: .
       dockerfile: Dockerfile
     labels:
-      - "traefik.http.routers.fastify-app.rule=Host(`fastify-app.local`)"
-      - "traefik.http.services.fastify-app.loadbalancer.server.port=3000"
+      - 'traefik.http.routers.fastify-app.rule=Host(`fastify-app.local`)'
+      - 'traefik.http.services.fastify-app.loadbalancer.server.port=3000'
     environment:
       NODE_ENV: production
       SERVER_HOSTNAME: 0.0.0.0
+      TZ: Asia/Shanghai
     command: yarn start:prod

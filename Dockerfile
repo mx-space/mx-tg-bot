@@ -22,6 +22,7 @@ COPY --from=builder /app .
 
 RUN npm i -g pnpm
 ENV NODE_ENV=production
+ENV TZ=Asia/Shanghai
 RUN pnpm install --frozen-lockfile --prefer-frozen-lockfile
 # Export 8888 for health check with fly.io
 EXPOSE 8888
