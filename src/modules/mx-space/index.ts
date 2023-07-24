@@ -7,6 +7,7 @@ import type { PluginFunction } from '~/lib/plugin'
 import type { Telegraf } from 'telegraf'
 
 import { escapeMarkdown } from '~/lib/helper'
+import { createNamespaceLogger } from '~/lib/logger'
 import { setTGBotCommands } from '~/lib/register-command'
 import { relativeTimeFromNow } from '~/lib/time'
 
@@ -49,7 +50,9 @@ async function bindCommands(tgBot: Telegraf) {
         handler: async (cmdLine, ctx) => {
           const [type, offset = 1] = cmdLine.split(' ')
           if (!type) {
-            return 'Usage: /mx_get_detail <type> [offset=1]\n\nType: post, note'
+            return escapeMarkdown(
+              'Usage: /mx_get_detail <type> [offset=1]\n\nType: post, note',
+            )
           }
           const schema = z.object({
             type: z.enum(['post', 'note']),
@@ -199,6 +202,7 @@ async function bindCommands(tgBot: Telegraf) {
   )
 }
 async function bindCronJob(tgBot: Telegraf) {
+  const logger = createNamespaceLogger('Mix Space CronJob')
   const sayGoodMorning = new CronJob('0 0 6 * * *', async () => {
     const { hitokoto } = await fetchHitokoto()
     const greeting = sample([
@@ -207,10 +211,11 @@ async function bindCronJob(tgBot: Telegraf) {
       '今天也是充满希望的一天',
     ])
     const tasks = appConfig.mxSpace.watchGroupIds.map((id) =>
-      tgBot.telegram.sendMessage(
-        id,
-        `早上好！${greeting}\n\n${hitokoto || ''}`,
-      ),
+      tgBot.telegram
+        .sendMessage(id, `早上好！${greeting}\n\n${hitokoto || ''}`)
+        .catch((err) => {
+          logger.error(err)
+        }),
     )
 
     await Promise.all(tasks)

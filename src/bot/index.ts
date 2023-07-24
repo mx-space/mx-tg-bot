@@ -36,6 +36,11 @@ async function initTgBot(): Promise<Telegraf> {
       parse_mode: 'HTML',
     })
   })
+
+  // Enable graceful stop
+  process.once('SIGINT', () => tgBot.stop('SIGINT'))
+  process.once('SIGTERM', () => tgBot.stop('SIGTERM'))
+
   return tgBot
 }
 export { tgBot, initTgBot }

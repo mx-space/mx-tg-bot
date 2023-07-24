@@ -8,6 +8,8 @@ import type {
 
 import { tgBot } from '~/bot'
 
+import { createNamespaceLogger } from './logger'
+
 interface ICommand {
   command: string
   description: string
@@ -52,6 +54,8 @@ export const gerenateTGBotCommandsUsageDoc = async () => {
     mangle: false,
   })
 }
+
+const logger = createNamespaceLogger('Telegram Bot Command')
 export async function setTGBotCommands(
   tgBot: Telegraf,
   commands: (BotCommand & {
@@ -83,9 +87,13 @@ export async function setTGBotCommands(
   } = {},
 ) {
   const { replyPrefix = '' } = options
-  await tgBot.telegram.setMyCommands(
-    await tgBot.telegram.getMyCommands().then((res) => res.concat(commands)),
-  )
+  await tgBot.telegram
+    .setMyCommands(
+      await tgBot.telegram.getMyCommands().then((res) => res.concat(commands)),
+    )
+    .catch((err) => {
+      logger.error(err)
+    })
 
   for (const cmd of commands) {
     const { command } = cmd
@@ -118,9 +126,17 @@ export async function setTGBotCommands(
           nextPrefix = replyPrefix
         }
 
-        await ctx.sendMessage(nextPrefix + handled, {
-          parse_mode: 'MarkdownV2',
-        })
+        await ctx
+          .sendMessage(nextPrefix + handled, {
+            parse_mode: 'MarkdownV2',
+          })
+          .catch((err) => {
+            logger.warn(
+              'Failed to send message, content: \n%s',
+              nextPrefix + handled,
+            )
+            logger.error(err.message)
+          })
         break
       }
     }
