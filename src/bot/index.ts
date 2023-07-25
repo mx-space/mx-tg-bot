@@ -15,6 +15,7 @@ async function initTgBot(): Promise<Telegraf> {
   const logger = createNamespaceLogger('Telegram Bot')
 
   tgBot = new Telegraf(bot.token)
+  // extendTgBotEvent(tgBot)
 
   tgBot.start((ctx) => {
     ctx.reply('Hi')
@@ -37,15 +38,6 @@ async function initTgBot(): Promise<Telegraf> {
       parse_mode: 'HTML',
     })
   })
-
-  // tgBot.command('test', (ctx) => {
-  //   createSendMessageInstance(tgBot)(ctx.chat.id, [
-  //     {
-  //       type: 'text',
-  //       content: 'aaaa',
-  //     },
-  //   ])
-  // })
 
   // Enable graceful stop
   process.once('SIGINT', () => tgBot.stop('SIGINT'))

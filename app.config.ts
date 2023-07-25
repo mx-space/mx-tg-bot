@@ -21,6 +21,8 @@ export const appConfig = {
     watchGroupIds: [-1001570490524],
   },
 
+  ownerId: 548935420,
+
   bot: {
     token: env.TG_BOT_TOKEN,
   },

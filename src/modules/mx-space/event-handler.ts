@@ -1,6 +1,7 @@
 import { appConfig } from 'app.config'
 import dayjs from 'dayjs'
 import rmd from 'remove-markdown'
+import { Markup } from 'telegraf'
 import type {
   CommentModel,
   LinkModel,
@@ -25,6 +26,7 @@ import {
   MxSocketEventTypes,
   MxSystemEventBusEvents,
 } from './types/mx-socket-types'
+import { TgQueryType } from './types/tg-query'
 import { urlBuilder } from './utils'
 
 const logger = createNamespaceLogger('mx-event')
@@ -156,8 +158,8 @@ export const handleEvent =
           payload as CommentModel
         const siteTitle = aggregateData.seo.title
         if (isWhispers) {
-          await sendToGroup(`「${siteTitle}」嘘，有人说了一句悄悄话。`)
-          return
+          // TODO send to owner tg chat
+          await sendToGroup(`「${siteTitle}」嘘，有人说了一句悄悄话。是什么呢`)
         }
 
         const parentIsWhispers = (() => {
@@ -227,7 +229,23 @@ export const handleEvent =
           message += `\n\n查看评论：${webUrl}${uri}#comments-${id}`
         }
 
-        await sendToGroup(message)
+        if (isWhispers) {
+          await ctx.tgBot.telegram.sendMessage(
+            appConfig.ownerId,
+            message,
+            Markup.keyboard([
+              Markup.button.callback(
+                '回复',
+                JSON.stringify({
+                  type: TgQueryType.ReplyComment,
+                  commentId: id,
+                }),
+              ),
+            ]),
+          )
+        } else {
+          await sendToGroup(message)
+        }
         return
       }
       case MxSocketEventTypes.SAY_CREATE: {

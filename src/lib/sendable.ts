@@ -34,7 +34,6 @@ export const createSendMessageInstance =
       return true
     })
 
-    console.log(keyboardMessage)
     for (const msg of filteredMessage) {
       switch (msg.type) {
         case 'text':

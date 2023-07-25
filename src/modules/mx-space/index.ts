@@ -15,6 +15,7 @@ import { apiClient } from './api-client'
 import { fetchHitokoto } from './api/hitokoto'
 import { getMxSpaceAggregateData } from './data'
 import { createMxSocket } from './socket'
+import { TgQueryType } from './types/tg-query'
 import { urlBuilder } from './utils'
 
 export const register: PluginFunction = async (ctx) => {
@@ -33,11 +34,57 @@ export const register: PluginFunction = async (ctx) => {
 async function bindEvents(tgBot: Telegraf) {
   tgBot.on('new_chat_members', async (ctx) => {
     const { hitokoto } = await fetchHitokoto()
-    ctx.sendMessage(`欢迎新大佬 @${ctx.from.username} \n\n${hitokoto}`, {
+    const identifier = ctx.from.username
+      ? `@${ctx.from.username}`
+      : `${ctx.from.first_name}(${ctx.from.id})`
+    ctx.sendMessage(`欢迎新大佬 ${identifier} \n\n${hitokoto}`, {
       parse_mode: 'MarkdownV2',
       reply_to_message_id: ctx.message.message_id,
     })
   })
+
+  let toCommentId: string | undefined
+  tgBot.on('callback_query', async (ctx) => {
+    const { data } = ctx.update.callback_query as any
+    try {
+      const parsedData = JSON.parse(data)
+      const { type } = parsedData
+
+      switch (type) {
+        case TgQueryType.ReplyComment: {
+          const { commentId } = parsedData
+          toCommentId = commentId
+        }
+      }
+    } finally {
+      await ctx.answerCbQuery('DONE')
+    }
+  })
+
+  // tgBot.drop('text', async (ctx) => {
+  //   const text = ctx.message.text
+  //
+  //   if (toCommentId) {
+  //     {
+  //       await apiClient.comment.proxy.master
+  //         .reply(toCommentId)
+  //         .post<CommentModel>({
+  //           data: {
+  //             text,
+  //           },
+  //         })
+  //         .then(() => {
+  //           ctx.reply('回复成功！')
+  //         })
+  //         .catch((err) => {
+  //           ctx.reply(`回复失败！${err.message}`)
+  //         })
+  //         .finally(() => {
+  //           toCommentId = undefined
+  //         })
+  //     }
+  //   }
+  // })
 }
 
 async function bindCommands(tgBot: Telegraf) {
