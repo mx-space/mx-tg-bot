@@ -1,0 +1,37 @@
+{
+  "name": "git-webhook-handler",
+  "version": "1.0.6",
+  "description": "Web handler / middleware for processing GitHub, Gitee, Gitlab Webhooks",
+  "main": "git-webhook-handler.js",
+  "types": "git-webhook-handler.d.ts",
+  "scripts": {
+    "lint": "standard *.js",
+    "test": "npm run lint && node test.js"
+  },
+  "keywords": [
+    "node",
+    "webhooks",
+    "github",
+    "gitee",
+    "gitlab",
+    "gitea",
+    "gogs"
+  ],
+  "author": "Rem486 (http://rem486.top/)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rem486/git-webhook-handler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Rem486/git-webhook-handler/issues"
+  },
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "*",
+    "run-series": "~1.1.8",
+    "standard": "~14.3.1",
+    "tape": "~4.11.0",
+    "through2": "~3.0.1"
+  }
+}

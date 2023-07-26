@@ -74,9 +74,9 @@ dependencies:
   fastify-tsconfig:
     specifier: 1.0.1
     version: 1.0.1
-  github-webhook-handler:
-    specifier: 1.0.0
-    version: 1.0.0
+  git-webhook-handler:
+    specifier: link:./packages/git-webhook-handler
+    version: link:packages/git-webhook-handler
   husky:
     specifier: 8.0.3
     version: 8.0.3
@@ -1452,14 +1452,6 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /bl@4.0.4:
-    resolution: {integrity: sha512-7tdr4EpSd7jJ6tuQ21vu2ke8w7pNEstzj1O8wwq6sNNzO3UDi5MA8Gny/gquCj7r2C6fHudg8tKRGyjRgmvNxQ==}
-    dependencies:
-      buffer: 5.7.1
-      inherits: 2.0.4
-      readable-stream: 3.6.2
-    dev: false
-
   /brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
     dependencies:
@@ -1508,13 +1500,6 @@ packages:
   /buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
     dev: true
-
-  /buffer@5.7.1:
-    resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
-    dependencies:
-      base64-js: 1.5.1
-      ieee754: 1.2.1
-    dev: false
 
   /buffer@6.0.3:
     resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
@@ -2497,12 +2482,6 @@ packages:
     dependencies:
       resolve-pkg-maps: 1.0.0
     dev: true
-
-  /github-webhook-handler@1.0.0:
-    resolution: {integrity: sha512-1OXGPYT2AF6gpINFoTMEn82AaeCX85bpG7hYxud5FwJR0U3PzMVRGjDP1UcV8Z++5ObcSlDDFHOEdl4p0tLkWQ==}
-    dependencies:
-      bl: 4.0.4
-    dev: false
 
   /glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}

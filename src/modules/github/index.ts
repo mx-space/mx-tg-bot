@@ -1,5 +1,5 @@
 import { appConfig } from 'app.config'
-import createHandler from 'github-webhook-handler'
+import createHandler from 'git-webhook-handler'
 import type { PluginFunction } from '~/lib/plugin'
 import type { CheckRun } from './types/check-run'
 import type { IssueEvent } from './types/issue'
@@ -21,7 +21,10 @@ export const register: PluginFunction = async (ctx) => {
   })
 
   server.post('/gh/webhook', (req, res) => {
-    handler(req.raw, res.raw, (err) => {
+    Object.assign(req.raw, {
+      body: req.body,
+    })
+    handler(req.raw, res.raw, () => {
       res.statusCode = 404
       res.send('no such location')
     })

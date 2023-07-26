@@ -40,7 +40,8 @@
     "fastify-cli": "5.7.1",
     "fastify-plugin": "4.5.1",
     "fastify-tsconfig": "1.0.1",
-    "github-webhook-handler": "1.0.0",
+    "git-webhook-handler": "link:./packages/git-webhook-handler",
+    "husky": "8.0.3",
     "lodash": "4.17.21",
     "marked": "5.1.1",
     "randomcolor": "0.6.2",
@@ -48,8 +49,7 @@
     "socket.io-client": "4.7.1",
     "telegraf": "4.12.2",
     "tsconfig-paths": "4.2.0",
-    "zod": "3.21.4",
-    "husky": "8.0.3"
+    "zod": "3.21.4"
   },
   "devDependencies": {
     "@innei/eslint-config-ts": "0.11.1",
