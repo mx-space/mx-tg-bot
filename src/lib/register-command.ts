@@ -100,23 +100,18 @@ export async function setTGBotCommands(
     commandMap[command] = cmd
   }
 
-  tgBot.on('text', async (ctx) => {
-    const senderMsg = ctx.message.text
+  for (const cmd of commands) {
+    const { command, handler } = cmd
+    tgBot.command(cmd.command, async (ctx) => {
+      const senderMsg = ctx.message.text
 
-    if (!senderMsg) return
-
-    for await (const cmd of commands) {
-      const { command, handler } = cmd
-
+      if (!senderMsg) return
       const matchedCommand = `/${command}`
-      const isMatch = senderMsg.startsWith(matchedCommand)
-
-      if (!isMatch) continue
 
       const cmdLine = senderMsg.slice(matchedCommand.length).trim()
 
       const handled = await handler(cmdLine, ctx)
-      if (handled === true) break
+      if (handled === true) return
 
       if (typeof handled === 'string' && handled) {
         let nextPrefix = ''
@@ -137,8 +132,7 @@ export async function setTGBotCommands(
             )
             logger.error(err.message)
           })
-        break
       }
-    }
-  })
+    })
+  }
 }

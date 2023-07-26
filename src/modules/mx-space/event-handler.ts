@@ -13,9 +13,11 @@ import type {
 } from '@mx-space/api-client'
 import type { Sendable } from '~/lib/sendable'
 import type { ModuleContext } from '~/types/context'
+import type { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
 
 import { LinkState } from '@mx-space/api-client'
 
+import { escapeMarkdown } from '~/lib/helper'
 import { createNamespaceLogger } from '~/lib/logger'
 import { createSendMessageInstance } from '~/lib/sendable'
 import { getShortDateTime, relativeTimeFromNow } from '~/lib/time'
@@ -58,7 +60,6 @@ export const handleEvent =
 
         if (type === MxSocketEventTypes.POST_UPDATE) {
           // only emit created date after 90 days
-          //
           const createdDate = dayjs(created)
           const now = dayjs()
           const diff = now.diff(createdDate, 'day')
@@ -76,16 +77,11 @@ export const handleEvent =
           owner.name
         } ${publishDescription}: ${title}\n\n${simplePreview}\n\n${
           summary ? `${summary}\n\n` : ''
-        }`
+        }\n前往阅读：${url}`
         await sendToGroup([
           {
             type: 'text',
             content: message,
-          },
-          {
-            type: 'url',
-            url,
-            label: '前往阅读',
           },
         ])
 
@@ -158,7 +154,6 @@ export const handleEvent =
           payload as CommentModel
         const siteTitle = aggregateData.seo.title
         if (isWhispers) {
-          // TODO send to owner tg chat
           await sendToGroup(`「${siteTitle}」嘘，有人说了一句悄悄话。是什么呢`)
         }
 
@@ -225,26 +220,42 @@ export const handleEvent =
         })()
 
         const webUrl = aggregateData.url.webUrl
-        if (uri) {
-          message += `\n\n查看评论：${webUrl}${uri}#comments-${id}`
-        }
+        const url = `${webUrl}${uri}`
 
         if (isWhispers) {
+          const buttons: InlineKeyboardButton[] = [
+            Markup.button.callback(
+              '回复',
+              JSON.stringify({
+                type: TgQueryType.ReplyComment,
+                commentId: id,
+              }),
+            ),
+          ]
+
+          if (uri) {
+            buttons.push(Markup.button.url('查看', url))
+          }
           await ctx.tgBot.telegram.sendMessage(
             appConfig.ownerId,
             message,
-            Markup.keyboard([
-              Markup.button.callback(
-                '回复',
-                JSON.stringify({
-                  type: TgQueryType.ReplyComment,
-                  commentId: id,
-                }),
-              ),
-            ]),
+            Markup.keyboard(buttons),
           )
         } else {
-          await sendToGroup(message)
+          const sendable: Sendable = [
+            {
+              type: 'text',
+              content: escapeMarkdown(message),
+            },
+          ]
+          if (uri) {
+            sendable.push({
+              type: 'url',
+              url,
+              label: '查看',
+            })
+          }
+          await sendToGroup(sendable)
         }
         return
       }

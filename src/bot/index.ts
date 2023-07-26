@@ -6,6 +6,7 @@ import { createNamespaceLogger } from '~/lib/logger'
 import { gerenateTGBotCommandsUsageDoc } from '~/lib/register-command'
 
 import { appConfig } from '../app.config'
+import { botEventBus } from './emitter'
 
 const { bot } = appConfig
 
@@ -24,6 +25,10 @@ async function initTgBot(): Promise<Telegraf> {
   tgBot.launch()
 
   logger.info('Ready!')
+
+  tgBot.on('text', (ctx) => {
+    botEventBus.emit('text', ctx)
+  })
 
   await tgBot.telegram.setMyCommands([
     ...(await tgBot.telegram.getMyCommands()),

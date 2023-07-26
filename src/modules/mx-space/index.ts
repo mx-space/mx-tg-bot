@@ -3,9 +3,13 @@ import { CronJob } from 'cron'
 import { sample } from 'lodash'
 import RemoveMarkdown from 'remove-markdown'
 import { z } from 'zod'
+import type { CommentModel } from '@mx-space/api-client'
 import type { PluginFunction } from '~/lib/plugin'
 import type { Telegraf } from 'telegraf'
+import type { Context } from 'telegraf/typings/context'
+import type { Message, Update } from 'telegraf/typings/core/types/typegram'
 
+import { botEventBus } from '~/bot/emitter'
 import { escapeMarkdown } from '~/lib/helper'
 import { createNamespaceLogger } from '~/lib/logger'
 import { setTGBotCommands } from '~/lib/register-command'
@@ -43,7 +47,9 @@ async function bindEvents(tgBot: Telegraf) {
     })
   })
 
+  // 只有允许一个
   let toCommentId: string | undefined
+  let memoChatId: number | undefined
   tgBot.on('callback_query', async (ctx) => {
     const { data } = ctx.update.callback_query as any
     try {
@@ -54,6 +60,14 @@ async function bindEvents(tgBot: Telegraf) {
         case TgQueryType.ReplyComment: {
           const { commentId } = parsedData
           toCommentId = commentId
+          if (!ctx.chat) return
+          memoChatId = ctx.chat.id
+
+          ctx.answerCbQuery()
+
+          ctx.sendMessage(
+            `请回复评论内容。当前记录的引用回复 ID 为：${commentId}`,
+          )
         }
       }
     } finally {
@@ -61,30 +75,38 @@ async function bindEvents(tgBot: Telegraf) {
     }
   })
 
-  // tgBot.drop('text', async (ctx) => {
-  //   const text = ctx.message.text
-  //
-  //   if (toCommentId) {
-  //     {
-  //       await apiClient.comment.proxy.master
-  //         .reply(toCommentId)
-  //         .post<CommentModel>({
-  //           data: {
-  //             text,
-  //           },
-  //         })
-  //         .then(() => {
-  //           ctx.reply('回复成功！')
-  //         })
-  //         .catch((err) => {
-  //           ctx.reply(`回复失败！${err.message}`)
-  //         })
-  //         .finally(() => {
-  //           toCommentId = undefined
-  //         })
-  //     }
-  //   }
-  // })
+  botEventBus.on('text', async (ctx: Context<Update>) => {
+    const chatId = ctx.chat?.id
+    if (!chatId) return
+
+    if (chatId !== memoChatId) return
+
+    const message = ctx.message as Update.New &
+      Update.NonChannel &
+      Message.TextMessage
+    const text = message.text
+    if (!text) return
+
+    if (!toCommentId) return
+
+    await apiClient.comment.proxy.master
+      .reply(toCommentId)
+      .post<CommentModel>({
+        data: {
+          text,
+        },
+      })
+      .then(() => {
+        ctx.reply('回复成功！')
+      })
+      .catch((err) => {
+        ctx.reply(`回复失败！${err.message}`)
+      })
+      .finally(() => {
+        memoChatId = undefined
+        toCommentId = undefined
+      })
+  })
 }
 
 async function bindCommands(tgBot: Telegraf) {
