@@ -1,6 +1,7 @@
 import { appConfig } from 'app.config'
 import dayjs from 'dayjs'
 import rmd from 'remove-markdown'
+import RemoveMarkdown from 'remove-markdown'
 import { Markup } from 'telegraf'
 import type {
   CommentModel,
@@ -17,7 +18,6 @@ import type { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
 
 import { LinkState } from '@mx-space/api-client'
 
-import { escapeMarkdown } from '~/lib/helper'
 import { createNamespaceLogger } from '~/lib/logger'
 import { createSendMessageInstance } from '~/lib/sendable'
 import { getShortDateTime, relativeTimeFromNow } from '~/lib/time'
@@ -245,7 +245,7 @@ export const handleEvent =
           const sendable: Sendable = [
             {
               type: 'text',
-              content: escapeMarkdown(message),
+              content: RemoveMarkdown(message),
             },
           ]
           if (uri) {
