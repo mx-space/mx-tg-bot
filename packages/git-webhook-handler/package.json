@@ -3,7 +3,7 @@
   "version": "1.0.6",
   "description": "Web handler / middleware for processing GitHub, Gitee, Gitlab Webhooks",
   "main": "git-webhook-handler.js",
-  "types": "git-webhook-handler.d.ts",
+  "types": "types.d.ts",
   "scripts": {
     "lint": "standard *.js",
     "test": "npm run lint && node test.js"

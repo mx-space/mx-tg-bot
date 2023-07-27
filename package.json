@@ -40,7 +40,7 @@
     "fastify-cli": "5.7.1",
     "fastify-plugin": "4.5.1",
     "fastify-tsconfig": "1.0.1",
-    "git-webhook-handler": "link:./packages/git-webhook-handler",
+    "git-webhook-handler": "link:packages/git-webhook-handler",
     "husky": "8.0.3",
     "lodash": "4.17.21",
     "marked": "5.1.2",

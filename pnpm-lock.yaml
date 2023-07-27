@@ -75,7 +75,7 @@ dependencies:
     specifier: 1.0.1
     version: 1.0.1
   git-webhook-handler:
-    specifier: link:./packages/git-webhook-handler
+    specifier: link:packages/git-webhook-handler
     version: link:packages/git-webhook-handler
   husky:
     specifier: 8.0.3
