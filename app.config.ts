@@ -29,12 +29,12 @@ export const appConfig = {
 
   githubHook: {
     secret: env.GH_WEBHOOK_SECRET,
-    watchGroupIds: [-1001570490524],
+    watchGroupIds: [-1001918532532],
   },
   bilibili: {
     live: {
       id: 1434499,
     },
-    watchGroupIds: [-1001570490524],
+    watchGroupIds: [-1001570490524, -1001918532532],
   },
 }

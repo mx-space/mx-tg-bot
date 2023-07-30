@@ -1,7 +1,6 @@
 import { appConfig } from 'app.config'
 import dayjs from 'dayjs'
-import rmd from 'remove-markdown'
-import RemoveMarkdown from 'remove-markdown'
+import { default as RemoveMarkdown, default as rmd } from 'remove-markdown'
 import { Markup } from 'telegraf'
 import type {
   CommentModel,
@@ -282,7 +281,10 @@ export const handleEvent =
         const messageWithStack = `来自 Mix Space 的系统异常：${getShortDateTime(
           new Date(),
         )}\n${message}\n\n${stack}`
-        await sendToGroup(messageWithStack)
+        await ctx.tgBot.telegram.sendMessage(
+          appConfig.ownerId,
+          messageWithStack,
+        )
         return
       }
     }
