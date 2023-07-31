@@ -18,7 +18,7 @@ export const appConfig = {
     // gateway: 'http://127.0.0.1:2333/system',
     token: env.MX_SPACE_TOKEN,
 
-    watchGroupIds: [-1001570490524],
+    watchGroupIds: [-1001570490524, -1001918532532],
   },
 
   ownerId: 548935420,
