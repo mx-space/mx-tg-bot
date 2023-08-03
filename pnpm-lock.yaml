@@ -93,8 +93,8 @@ dependencies:
     specifier: 0.5.0
     version: 0.5.0
   socket.io-client:
-    specifier: 4.7.1
-    version: 4.7.1
+    specifier: 4.7.2
+    version: 4.7.2
   telegraf:
     specifier: 4.12.2
     version: 4.12.2
@@ -122,8 +122,8 @@ devDependencies:
     specifier: 5.0.1
     version: 5.0.1
   '@types/node':
-    specifier: 20.4.5
-    version: 20.4.5
+    specifier: 20.4.6
+    version: 20.4.6
   '@types/node-telegram-bot-api':
     specifier: 0.61.6
     version: 0.61.6
@@ -140,8 +140,8 @@ devDependencies:
     specifier: 8.46.0
     version: 8.46.0
   fast-json-stringify:
-    specifier: 5.7.0
-    version: 5.7.0
+    specifier: 5.8.0
+    version: 5.8.0
   lint-staged:
     specifier: 13.2.3
     version: 13.2.3
@@ -150,7 +150,7 @@ devDependencies:
     version: 3.0.0
   ts-node:
     specifier: 10.9.1
-    version: 10.9.1(@types/node@20.4.5)(typescript@5.1.6)
+    version: 10.9.1(@types/node@20.4.6)(typescript@5.1.6)
   tsx:
     specifier: 3.12.7
     version: 3.12.7
@@ -685,7 +685,7 @@ packages:
   /@fastify/fast-json-stringify-compiler@4.3.0:
     resolution: {integrity: sha512-aZAXGYo6m22Fk1zZzEUKBvut/CIIQe/BapEORnxiD5Qr0kPHqqI69NtEMCme74h+at72sPhbkb4ZrLd1W3KRLA==}
     dependencies:
-      fast-json-stringify: 5.7.0
+      fast-json-stringify: 5.8.0
     dev: false
 
   /@fastify/helmet@11.0.0:
@@ -978,7 +978,7 @@ packages:
     resolution: {integrity: sha512-WHa/1rtNtD2Q/H0+YTTZoty+/5rcE66iAFX2IY+JuUoOACsevYyFkSYu/2vdw+G5LrmO7Lxowrqm0av4k3qWNQ==}
     dependencies:
       '@types/luxon': 3.3.1
-      '@types/node': 20.4.5
+      '@types/node': 20.4.6
     dev: true
 
   /@types/json-schema@7.0.12:
@@ -1004,13 +1004,13 @@ packages:
   /@types/node-telegram-bot-api@0.61.6:
     resolution: {integrity: sha512-opkSxWn7ZLNMLHOwJHROKfBvr5dkqYoLCDpJ/m8cGMhreuF+tHc5bJ3E9isiIFiFOzD8Vj1K7TnCSWPIf7SmGw==}
     dependencies:
-      '@types/node': 20.4.5
+      '@types/node': 20.4.6
       '@types/request': 2.48.8
       eventemitter3: 5.0.1
     dev: true
 
-  /@types/node@20.4.5:
-    resolution: {integrity: sha512-rt40Nk13II9JwQBdeYqmbn2Q6IVTA5uPhvSO+JVqdXw/6/4glI6oR9ezty/A9Hg5u7JH4OmYmuQ+XvjKm0Datg==}
+  /@types/node@20.4.6:
+    resolution: {integrity: sha512-q0RkvNgMweWWIvSMDiXhflGUKMdIxBo2M2tYM/0kEGDueQByFzK4KZAgu5YHGFNxziTlppNpTIBcqHQAxlfHdA==}
     dev: true
 
   /@types/parse-author@2.0.1:
@@ -1033,7 +1033,7 @@ packages:
     resolution: {integrity: sha512-whjk1EDJPcAR2kYHRbFl/lKeeKYTi05A15K9bnLInCVroNDCtXce57xKdI0/rQaA3K+6q0eFyUBPmqfSndUZdQ==}
     dependencies:
       '@types/caseless': 0.12.2
-      '@types/node': 20.4.5
+      '@types/node': 20.4.6
       '@types/tough-cookie': 4.0.2
       form-data: 2.5.1
     dev: true
@@ -1816,12 +1816,12 @@ packages:
       once: 1.4.0
     dev: false
 
-  /engine.io-client@6.5.1:
-    resolution: {integrity: sha512-hE5wKXH8Ru4L19MbM1GgYV/2Qo54JSMh1rlJbfpa40bEWkCKNo3ol2eOtGmowcr+ysgbI7+SGL+by42Q3pt/Ng==}
+  /engine.io-client@6.5.2:
+    resolution: {integrity: sha512-CQZqbrpEYnrpGqC07a9dJDz4gePZUgTPMU3NKJPSeQOyw27Tst4Pl3FemKoFGAlHzgZmKjoRmiJvbWfhCXUlIg==}
     dependencies:
       '@socket.io/component-emitter': 3.1.0
       debug: 4.3.4
-      engine.io-parser: 5.1.0
+      engine.io-parser: 5.2.1
       ws: 8.11.0
       xmlhttprequest-ssl: 2.0.0
     transitivePeerDependencies:
@@ -1830,8 +1830,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /engine.io-parser@5.1.0:
-    resolution: {integrity: sha512-enySgNiK5tyZFynt3z7iqBR+Bto9EVVVvDFuTT0ioHCGbzirZVGDGiQjZzEp8hWl6hd5FSVytJGuScX1C1C35w==}
+  /engine.io-parser@5.2.1:
+    resolution: {integrity: sha512-9JktcM3u18nU9N2Lz3bWeBgxVgOKpw7yhRaoxQA3FUDZzzw+9WlA6p4G4u0RixNkg14fH7EfEc/RhpurtiROTQ==}
     engines: {node: '>=10.0.0'}
     dev: false
 
@@ -2235,8 +2235,8 @@ packages:
     resolution: {integrity: sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==}
     dev: true
 
-  /fast-json-stringify@5.7.0:
-    resolution: {integrity: sha512-sBVPTgnAZseLu1Qgj6lUbQ0HfjFhZWXAmpZ5AaSGkyLh5gAXBga/uPJjQPHpDFjC9adWIpdOcCLSDTgrZ7snoQ==}
+  /fast-json-stringify@5.8.0:
+    resolution: {integrity: sha512-VVwK8CFMSALIvt14U8AvrSzQAwN/0vaVRiFFUVlpnXSnDGrSkOAO5MtzyN8oQNjLd5AqTW5OZRgyjoNuAuR3jQ==}
     dependencies:
       '@fastify/deepmerge': 1.3.0
       ajv: 8.12.0
@@ -2310,7 +2310,7 @@ packages:
       abstract-logging: 2.0.1
       avvio: 8.2.1
       fast-content-type-parse: 1.0.0
-      fast-json-stringify: 5.7.0
+      fast-json-stringify: 5.8.0
       find-my-way: 7.6.2
       light-my-request: 5.10.0
       pino: 8.14.2
@@ -3806,13 +3806,13 @@ packages:
       is-fullwidth-code-point: 4.0.0
     dev: true
 
-  /socket.io-client@4.7.1:
-    resolution: {integrity: sha512-Qk3Xj8ekbnzKu3faejo4wk2MzXA029XppiXtTF/PkbTg+fcwaTw1PlDrTrrrU4mKoYC4dvlApOnSeyLCKwek2w==}
+  /socket.io-client@4.7.2:
+    resolution: {integrity: sha512-vtA0uD4ibrYD793SOIAwlo8cj6haOeMHrGvwPxJsxH7CeIksqJ+3Zc06RvWTIFgiSqx4A3sOnTXpfAEE2Zyz6w==}
     engines: {node: '>=10.0.0'}
     dependencies:
       '@socket.io/component-emitter': 3.1.0
       debug: 4.3.4
-      engine.io-client: 6.5.1
+      engine.io-client: 6.5.2
       socket.io-parser: 4.2.4
     transitivePeerDependencies:
       - bufferutil
@@ -4050,7 +4050,7 @@ packages:
       typescript: 5.1.6
     dev: true
 
-  /ts-node@10.9.1(@types/node@20.4.5)(typescript@5.1.6):
+  /ts-node@10.9.1(@types/node@20.4.6)(typescript@5.1.6):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -4069,7 +4069,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 20.4.5
+      '@types/node': 20.4.6
       acorn: 8.10.0
       acorn-walk: 8.2.0
       arg: 4.1.3
