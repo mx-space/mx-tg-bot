@@ -14,6 +14,7 @@ import type {
 import type { Sendable } from '~/lib/sendable'
 import type { ModuleContext } from '~/types/context'
 import type { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
+import type { IActivityLike } from './types/activity'
 
 import { LinkState } from '@mx-space/api-client'
 
@@ -273,6 +274,33 @@ export const handleEvent =
 
         const message = `${owner.name} 发布一条动态说：\n${content}`
         await sendToGroup(message)
+
+        return
+      }
+
+      case MxSocketEventTypes.ACTIVITY_LIKE: {
+        const {
+          ref: { id, title },
+        } = payload as IActivityLike
+
+        // '/url-builder/:id'
+        const refModelUrl = await apiClient.proxy
+          .helper('url-builder')(id)
+          .get<{
+            data: string
+          }>()
+          .then((res) => res.data)
+
+        await ctx.tgBot.telegram.sendMessage(
+          appConfig.mxSpace.watchChannelId,
+          `「${title}」有人点赞了哦！\n`,
+          Markup.inlineKeyboard([
+            {
+              url: refModelUrl,
+              text: '查看',
+            },
+          ]),
+        )
 
         return
       }

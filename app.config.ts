@@ -19,6 +19,7 @@ export const appConfig = {
     token: env.MX_SPACE_TOKEN,
 
     watchGroupIds: [-1001570490524, -1001918532532],
+    watchChannelId: -1001918532532,
   },
 
   ownerId: 548935420,
