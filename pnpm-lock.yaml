@@ -36,8 +36,8 @@ dependencies:
     specifier: 0.3.0
     version: 0.3.0
   '@mx-space/api-client':
-    specifier: 1.4.3
-    version: 1.4.3
+    specifier: 1.5.1
+    version: 1.5.1
   '@tanstack/query-core':
     specifier: 4.32.6
     version: 4.32.6
@@ -921,8 +921,8 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /@mx-space/api-client@1.4.3:
-    resolution: {integrity: sha512-1gKP2wyRkfhCw8U2hwkKP6TlZP/Zc99yDvSNisGvWPgQsYumDJyiisQsFJw4lgT9JhC8u+iq4NzYewFdzsRlLg==}
+  /@mx-space/api-client@1.5.1:
+    resolution: {integrity: sha512-bNMDcFu/G2xzgk2ZV3ZUp3Rkq9+wKR/REFjGdTZEgkLCa9KzqvQ3/bhtvl9wciuVR83M+dZjDqlWTeGfQNpHUQ==}
     dev: false
 
   /@nodelib/fs.scandir@2.1.5:
