@@ -28,7 +28,7 @@
     "@fastify/sensible": "5.2.0",
     "@innei/next-async": "0.3.0",
     "@mx-space/api-client": "1.5.1",
-    "@tanstack/query-core": "4.32.6",
+    "@tanstack/query-core": "4.33.0",
     "axios": "1.4.0",
     "chalk": "4.1.2",
     "close-with-grace": "1.2.0",
