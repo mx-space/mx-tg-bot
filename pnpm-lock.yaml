@@ -122,8 +122,8 @@ devDependencies:
     specifier: 5.0.1
     version: 5.0.1
   '@types/node':
-    specifier: 20.5.1
-    version: 20.5.1
+    specifier: 20.5.2
+    version: 20.5.2
   '@types/node-telegram-bot-api':
     specifier: 0.61.7
     version: 0.61.7
@@ -150,7 +150,7 @@ devDependencies:
     version: 3.0.2
   ts-node:
     specifier: 10.9.1
-    version: 10.9.1(@types/node@20.5.1)(typescript@5.1.6)
+    version: 10.9.1(@types/node@20.5.2)(typescript@5.1.6)
   tsx:
     specifier: 3.12.7
     version: 3.12.7
@@ -967,7 +967,7 @@ packages:
     resolution: {integrity: sha512-WHa/1rtNtD2Q/H0+YTTZoty+/5rcE66iAFX2IY+JuUoOACsevYyFkSYu/2vdw+G5LrmO7Lxowrqm0av4k3qWNQ==}
     dependencies:
       '@types/luxon': 3.3.1
-      '@types/node': 20.5.1
+      '@types/node': 20.5.2
     dev: true
 
   /@types/json-schema@7.0.12:
@@ -993,13 +993,13 @@ packages:
   /@types/node-telegram-bot-api@0.61.7:
     resolution: {integrity: sha512-JrbYJaKJ1QWIB02lTo20tHg6eILbAdBqI/hQLCPFLin9rCDfv/Bwc+oXmBeaNJUcLy7JuCShUlF1uYDgurfRfw==}
     dependencies:
-      '@types/node': 20.5.1
+      '@types/node': 20.5.2
       '@types/request': 2.48.8
       eventemitter3: 5.0.1
     dev: true
 
-  /@types/node@20.5.1:
-    resolution: {integrity: sha512-4tT2UrL5LBqDwoed9wZ6N3umC4Yhz3W3FloMmiiG4JwmUJWpie0c7lcnUNd4gtMKuDEO4wRVS8B6Xa0uMRsMKg==}
+  /@types/node@20.5.2:
+    resolution: {integrity: sha512-5j/lXt7unfPOUlrKC34HIaedONleyLtwkKggiD/0uuMfT8gg2EOpg0dz4lCD15Ga7muC+1WzJZAjIB9simWd6Q==}
     dev: true
 
   /@types/parse-author@2.0.1:
@@ -1022,7 +1022,7 @@ packages:
     resolution: {integrity: sha512-whjk1EDJPcAR2kYHRbFl/lKeeKYTi05A15K9bnLInCVroNDCtXce57xKdI0/rQaA3K+6q0eFyUBPmqfSndUZdQ==}
     dependencies:
       '@types/caseless': 0.12.2
-      '@types/node': 20.5.1
+      '@types/node': 20.5.2
       '@types/tough-cookie': 4.0.2
       form-data: 2.5.1
     dev: true
@@ -3951,7 +3951,7 @@ packages:
       typescript: 5.1.6
     dev: true
 
-  /ts-node@10.9.1(@types/node@20.5.1)(typescript@5.1.6):
+  /ts-node@10.9.1(@types/node@20.5.2)(typescript@5.1.6):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -3970,7 +3970,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 20.5.1
+      '@types/node': 20.5.2
       acorn: 8.10.0
       acorn-walk: 8.2.0
       arg: 4.1.3
