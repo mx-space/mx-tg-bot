@@ -57,7 +57,7 @@
     "@types/cron": "2.0.1",
     "@types/lodash": "4.14.197",
     "@types/marked": "5.0.1",
-    "@types/node": "20.5.4",
+    "@types/node": "20.5.6",
     "@types/node-telegram-bot-api": "0.61.7",
     "@types/randomcolor": "0.5.7",
     "@types/remove-markdown": "0.3.1",
@@ -68,7 +68,7 @@
     "prettier": "3.0.2",
     "ts-node": "10.9.1",
     "tsx": "3.12.7",
-    "typescript": "5.1.6"
+    "typescript": "5.2.2"
   },
   "engines": {
     "node": ">=16.20.0"
