@@ -64,7 +64,7 @@
     "cross-env": "7.0.3",
     "eslint": "8.48.0",
     "fast-json-stringify": "5.8.0",
-    "lint-staged": "13.3.0",
+    "lint-staged": "14.0.1",
     "prettier": "3.0.3",
     "ts-node": "10.9.1",
     "tsx": "3.12.7",
