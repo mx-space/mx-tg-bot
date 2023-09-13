@@ -28,7 +28,7 @@
     "@fastify/sensible": "5.2.0",
     "@innei/next-async": "0.3.0",
     "@mx-space/api-client": "1.5.1",
-    "@tanstack/query-core": "4.35.2",
+    "@tanstack/query-core": "4.35.3",
     "axios": "1.5.0",
     "chalk": "4.1.2",
     "close-with-grace": "1.2.0",
@@ -36,7 +36,7 @@
     "cron": "2.4.3",
     "dayjs": "1.11.9",
     "dotenv": "16.3.1",
-    "fastify": "4.23.0",
+    "fastify": "4.23.1",
     "fastify-cli": "5.8.0",
     "fastify-plugin": "4.5.1",
     "fastify-tsconfig": "1.0.1",
@@ -67,7 +67,7 @@
     "lint-staged": "13.3.0",
     "prettier": "3.0.3",
     "ts-node": "10.9.1",
-    "tsx": "3.12.9",
+    "tsx": "3.12.10",
     "typescript": "5.2.2"
   },
   "engines": {

@@ -39,8 +39,8 @@ dependencies:
     specifier: 1.5.1
     version: 1.5.1
   '@tanstack/query-core':
-    specifier: 4.35.2
-    version: 4.35.2
+    specifier: 4.35.3
+    version: 4.35.3
   axios:
     specifier: 1.5.0
     version: 1.5.0
@@ -63,8 +63,8 @@ dependencies:
     specifier: 16.3.1
     version: 16.3.1
   fastify:
-    specifier: 4.23.0
-    version: 4.23.0
+    specifier: 4.23.1
+    version: 4.23.1
   fastify-cli:
     specifier: 5.8.0
     version: 5.8.0
@@ -152,8 +152,8 @@ devDependencies:
     specifier: 10.9.1
     version: 10.9.1(@types/node@20.6.0)(typescript@5.2.2)
   tsx:
-    specifier: 3.12.9
-    version: 3.12.9
+    specifier: 3.12.10
+    version: 3.12.10
   typescript:
     specifier: 5.2.2
     version: 5.2.2
@@ -385,8 +385,8 @@ packages:
       source-map-support: 0.5.21
     dev: true
 
-  /@esbuild-kit/esm-loader@2.6.1:
-    resolution: {integrity: sha512-NJT43EF+rJ/KCU/9VlBWS9HByN1FvbWdNmtNxdZNLYcxwxF+MASIjRsH9/f6FRa3Eml+Fr8TNujB6uzNTAPZfQ==}
+  /@esbuild-kit/esm-loader@2.6.3:
+    resolution: {integrity: sha512-lUziJdacVDQrg65DwQ+OOQR9B1LQE2/pY77H+oVT0KQDLtsT2XfbHz7O+f0zUvexSWPKxMXa8h4RXT5PFAlv/g==}
     dependencies:
       '@esbuild-kit/core-utils': 3.3.0
       get-tsconfig: 4.7.0
@@ -939,8 +939,8 @@ packages:
     resolution: {integrity: sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==}
     dev: false
 
-  /@tanstack/query-core@4.35.2:
-    resolution: {integrity: sha512-IJYT+VVx0SGe3QWqL6XUgzEY1re3szCdGMSGD1VRdEej6Uq3O+qELR2Ypw1/a4bUYKXiDUpK4BAcBynWb6nbkQ==}
+  /@tanstack/query-core@4.35.3:
+    resolution: {integrity: sha512-PS+WEjd9wzKTyNjjQymvcOe1yg8f3wYc6mD+vb6CKyZAKvu4sIJwryfqfBULITKCla7P9C4l5e9RXePHvZOZeQ==}
     dev: false
 
   /@telegraf/types@6.8.1:
@@ -2240,7 +2240,7 @@ packages:
       close-with-grace: 1.2.0
       commist: 3.2.0
       dotenv: 16.3.1
-      fastify: 4.23.0
+      fastify: 4.23.1
       fastify-plugin: 4.5.1
       generify: 4.2.0
       help-me: 4.2.0
@@ -2264,8 +2264,8 @@ packages:
     engines: {node: '>=10.4.0'}
     dev: false
 
-  /fastify@4.23.0:
-    resolution: {integrity: sha512-u4aQUjAqf+GQQI+IeIJtzOKCJHtdwPlGxzopq/Kv6QcEdJ7xuJFSQ5Bi7+uJ+F8990jWECLzRcAyZ4pVsloRpQ==}
+  /fastify@4.23.1:
+    resolution: {integrity: sha512-JhZWyz2PgjzkDTrTX/PQ6+03s+/r2hC3RiOoF9WQUUHbPGiDJtQch1mg5IyJjUjwhug+/z1XHt5yweZNW4kbMg==}
     dependencies:
       '@fastify/ajv-compiler': 3.5.0
       '@fastify/error': 3.3.0
@@ -4021,13 +4021,13 @@ packages:
       strip-bom: 3.0.0
     dev: false
 
-  /tsx@3.12.9:
-    resolution: {integrity: sha512-N9Cpuiy55IcemQ2kouH1ZqDvjUa31mkhIYmnJKnvDp0sLQrK9MUrRuN/XzW70iTk5a2kX2A63wLYWORwa34vug==}
+  /tsx@3.12.10:
+    resolution: {integrity: sha512-2+46h4xvUt1aLDNvk5YBT8Uzw+b7BolGbn7iSMucYqCXZiDc+1IMghLVdw8kKjING32JFOeO+Am9posvjkeclA==}
     hasBin: true
     dependencies:
       '@esbuild-kit/cjs-loader': 2.4.2
       '@esbuild-kit/core-utils': 3.3.0
-      '@esbuild-kit/esm-loader': 2.6.1
+      '@esbuild-kit/esm-loader': 2.6.3
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
