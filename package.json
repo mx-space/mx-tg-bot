@@ -25,7 +25,7 @@
     "@fastify/multipart": "7.7.3",
     "@fastify/one-line-logger": "1.2.0",
     "@fastify/rate-limit": "8.0.3",
-    "@fastify/sensible": "5.2.0",
+    "@fastify/sensible": "5.3.0",
     "@innei/next-async": "0.3.0",
     "@mx-space/api-client": "1.5.1",
     "@tanstack/query-core": "4.35.3",
