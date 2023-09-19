@@ -9,8 +9,8 @@ dependencies:
     specifier: 5.7.1
     version: 5.7.1
   '@fastify/cors':
-    specifier: 8.3.0
-    version: 8.3.0
+    specifier: 8.4.0
+    version: 8.4.0
   '@fastify/env':
     specifier: 4.2.0
     version: 4.2.0
@@ -57,8 +57,8 @@ dependencies:
     specifier: 2.4.3
     version: 2.4.3
   dayjs:
-    specifier: 1.11.9
-    version: 1.11.9
+    specifier: 1.11.10
+    version: 1.11.10
   dotenv:
     specifier: 16.3.1
     version: 16.3.1
@@ -653,8 +653,8 @@ packages:
       text-decoding: 1.0.0
     dev: false
 
-  /@fastify/cors@8.3.0:
-    resolution: {integrity: sha512-oj9xkka2Tg0MrwuKhsSUumcAkfp2YCnKxmFEusi01pjk1YrdDsuSYTHXEelWNW+ilSy/ApZq0c2SvhKrLX0H1g==}
+  /@fastify/cors@8.4.0:
+    resolution: {integrity: sha512-MlVvMTenltToByTpLwlWtO+7dQ3l2J+1OpmGrx9JpSNWo1d+dhfNCOi23zHhxdFhtpDzfwGwCsKu9DTeG7k7nQ==}
     dependencies:
       fastify-plugin: 4.5.1
       mnemonist: 0.39.5
@@ -1678,8 +1678,8 @@ packages:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
     dev: false
 
-  /dayjs@1.11.9:
-    resolution: {integrity: sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA==}
+  /dayjs@1.11.10:
+    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
     dev: false
 
   /debug@3.2.7:
