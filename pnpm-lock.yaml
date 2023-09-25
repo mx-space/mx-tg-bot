@@ -54,8 +54,8 @@ dependencies:
     specifier: 2.15.3
     version: 2.15.3
   cron:
-    specifier: 2.4.3
-    version: 2.4.3
+    specifier: 2.4.4
+    version: 2.4.4
   dayjs:
     specifier: 1.11.10
     version: 1.11.10
@@ -122,8 +122,8 @@ devDependencies:
     specifier: 5.0.1
     version: 5.0.1
   '@types/node':
-    specifier: 20.6.5
-    version: 20.6.5
+    specifier: 20.7.0
+    version: 20.7.0
   '@types/node-telegram-bot-api':
     specifier: 0.61.8
     version: 0.61.8
@@ -150,7 +150,7 @@ devDependencies:
     version: 3.0.3
   ts-node:
     specifier: 10.9.1
-    version: 10.9.1(@types/node@20.6.5)(typescript@5.2.2)
+    version: 10.9.1(@types/node@20.7.0)(typescript@5.2.2)
   tsx:
     specifier: 3.13.0
     version: 3.13.0
@@ -949,7 +949,7 @@ packages:
     resolution: {integrity: sha512-WHa/1rtNtD2Q/H0+YTTZoty+/5rcE66iAFX2IY+JuUoOACsevYyFkSYu/2vdw+G5LrmO7Lxowrqm0av4k3qWNQ==}
     dependencies:
       '@types/luxon': 3.3.2
-      '@types/node': 20.6.5
+      '@types/node': 20.7.0
     dev: true
 
   /@types/json-schema@7.0.13:
@@ -974,13 +974,13 @@ packages:
   /@types/node-telegram-bot-api@0.61.8:
     resolution: {integrity: sha512-WKGyH3gKvWx7+a19oVZOyJLXjiptSG5PZkNbAHi4CvcRSLwCYBqJpxhERnt2oJuMuNR3oPmpFxv81cM4224cYA==}
     dependencies:
-      '@types/node': 20.6.5
+      '@types/node': 20.7.0
       '@types/request': 2.48.8
       eventemitter3: 5.0.1
     dev: true
 
-  /@types/node@20.6.5:
-    resolution: {integrity: sha512-2qGq5LAOTh9izcc0+F+dToFigBWiK1phKPt7rNhOqJSr35y8rlIBjDwGtFSgAI6MGIhjwOVNSQZVdJsZJ2uR1w==}
+  /@types/node@20.7.0:
+    resolution: {integrity: sha512-zI22/pJW2wUZOVyguFaUL1HABdmSVxpXrzIqkjsHmyUjNhPoWM1CKfvVuXfetHhIok4RY573cqS0mZ1SJEnoTg==}
     dev: true
 
   /@types/parse-author@2.0.1:
@@ -1003,7 +1003,7 @@ packages:
     resolution: {integrity: sha512-whjk1EDJPcAR2kYHRbFl/lKeeKYTi05A15K9bnLInCVroNDCtXce57xKdI0/rQaA3K+6q0eFyUBPmqfSndUZdQ==}
     dependencies:
       '@types/caseless': 0.12.3
-      '@types/node': 20.6.5
+      '@types/node': 20.7.0
       '@types/tough-cookie': 4.0.3
       form-data: 2.5.1
     dev: true
@@ -1629,8 +1629,8 @@ packages:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
     dev: true
 
-  /cron@2.4.3:
-    resolution: {integrity: sha512-YBvExkQYF7w0PxyeFLRyr817YVDhGxaCi5/uRRMqa4aWD3IFKRd+uNbpW1VWMdqQy8PZ7CElc+accXJcauPKzQ==}
+  /cron@2.4.4:
+    resolution: {integrity: sha512-MHlPImXJj3K7x7lyUHjtKEOl69CSlTOWxS89jiFgNkzXfvhVjhMz/nc7/EIfN9vgooZp8XTtXJ1FREdmbyXOiQ==}
     dependencies:
       '@types/luxon': 3.3.2
       luxon: 3.3.0
@@ -3969,7 +3969,7 @@ packages:
       typescript: 5.2.2
     dev: true
 
-  /ts-node@10.9.1(@types/node@20.6.5)(typescript@5.2.2):
+  /ts-node@10.9.1(@types/node@20.7.0)(typescript@5.2.2):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -3988,7 +3988,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 20.6.5
+      '@types/node': 20.7.0
       acorn: 8.10.0
       acorn-walk: 8.2.0
       arg: 4.1.3
