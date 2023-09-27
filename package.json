@@ -29,7 +29,7 @@
     "@innei/next-async": "0.3.0",
     "@mx-space/api-client": "1.5.1",
     "@tanstack/query-core": "4.35.3",
-    "axios": "1.5.0",
+    "axios": "1.5.1",
     "chalk": "4.1.2",
     "close-with-grace": "1.2.0",
     "consola": "2.15.3",
