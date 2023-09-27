@@ -119,8 +119,8 @@ devDependencies:
     specifier: 4.14.199
     version: 4.14.199
   '@types/marked':
-    specifier: 5.0.1
-    version: 5.0.1
+    specifier: 5.0.2
+    version: 5.0.2
   '@types/node':
     specifier: 20.7.0
     version: 20.7.0
@@ -131,8 +131,8 @@ devDependencies:
     specifier: 0.5.7
     version: 0.5.7
   '@types/remove-markdown':
-    specifier: 0.3.1
-    version: 0.3.1
+    specifier: 0.3.2
+    version: 0.3.2
   cross-env:
     specifier: 7.0.3
     version: 7.0.3
@@ -967,8 +967,8 @@ packages:
   /@types/luxon@3.3.2:
     resolution: {integrity: sha512-l5cpE57br4BIjK+9BSkFBOsWtwv6J9bJpC7gdXIzZyI0vuKvNTk0wZZrkQxMGsUAuGW9+WMNWF2IJMD7br2yeQ==}
 
-  /@types/marked@5.0.1:
-    resolution: {integrity: sha512-Y3pAUzHKh605fN6fvASsz5FDSWbZcs/65Q6xYRmnIP9ZIYz27T4IOmXfH9gWJV1dpi7f1e7z7nBGUTx/a0ptpA==}
+  /@types/marked@5.0.2:
+    resolution: {integrity: sha512-OucS4KMHhFzhz27KxmWg7J+kIYqyqoW5kdIEI319hqARQQUTqhao3M/F+uFnDXD0Rg72iDDZxZNxq5gvctmLlg==}
     dev: true
 
   /@types/node-telegram-bot-api@0.61.8:
@@ -995,8 +995,8 @@ packages:
     resolution: {integrity: sha512-LPcG96dGYRCsXlk1fslUNIg6ebEi+bKNyn84uBL/pu2cRSf5i/djD3ArJZOyzszVMVV/DB87va6pMZP+tRSl/w==}
     dev: true
 
-  /@types/remove-markdown@0.3.1:
-    resolution: {integrity: sha512-JpJNEJEsmmltyL2LdE8KRjJ0L2ad5vgLibqNj85clohT9AyTrfN6jvHxStPshDkmtcL/ShFu0p2tbY7DBS1mqQ==}
+  /@types/remove-markdown@0.3.2:
+    resolution: {integrity: sha512-XlpidYPjaOU6Te0Sfw8xfMudk3k8i8MQsTBw9JZ9MPuTRpqP4mYc2PWibr5T5VAdxEVbd++qXkCGuNVtNype8g==}
     dev: true
 
   /@types/request@2.48.8:
