@@ -43,7 +43,7 @@
     "git-webhook-handler": "link:packages/git-webhook-handler",
     "husky": "8.0.3",
     "lodash": "4.17.21",
-    "marked": "5.1.2",
+    "marked": "9.1.6",
     "randomcolor": "0.6.2",
     "remove-markdown": "0.5.0",
     "socket.io-client": "4.7.2",
