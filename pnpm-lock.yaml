@@ -72,8 +72,8 @@ dependencies:
     specifier: 4.5.1
     version: 4.5.1
   fastify-tsconfig:
-    specifier: 1.0.1
-    version: 1.0.1
+    specifier: 2.0.0
+    version: 2.0.0
   git-webhook-handler:
     specifier: link:packages/git-webhook-handler
     version: link:packages/git-webhook-handler
@@ -2256,9 +2256,9 @@ packages:
     resolution: {integrity: sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==}
     dev: false
 
-  /fastify-tsconfig@1.0.1:
-    resolution: {integrity: sha512-BXkTG3JYcjJb3xX5R5FcE9ciscV/h7YtmnkiSaNAONd1g6ooMSN/4GWfhA8hnS6SRZFYBBxsn8719Mj9lbCOtA==}
-    engines: {node: '>=10.4.0'}
+  /fastify-tsconfig@2.0.0:
+    resolution: {integrity: sha512-pvYwdtbZUJr/aTD7ZE0rGlvtYpx7IThHKVLBoqCKmT3FJpwm23XA2+PDmq8ZzfqqG4ajpyrHd5bkIixcIFjPhQ==}
+    engines: {node: '>=18.0.0'}
     dev: false
 
   /fastify@4.24.3:
