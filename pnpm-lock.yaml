@@ -38,6 +38,9 @@ dependencies:
   '@mx-space/api-client':
     specifier: 1.6.2
     version: 1.6.2
+  '@mx-space/webhook':
+    specifier: 0.1.3
+    version: 0.1.3
   '@tanstack/query-core':
     specifier: 4.36.1
     version: 4.36.1
@@ -584,8 +587,8 @@ packages:
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
     dev: true
 
-  /@eslint/eslintrc@2.1.3:
-    resolution: {integrity: sha512-yZzuIG+jnVu6hNSzFEN07e8BxF3uAzYtQb6uDkaYZLo6oYZDCq454c5kB8zxnzfCYyP4MIuyBn10L0DqwujTmA==}
+  /@eslint/eslintrc@2.1.4:
+    resolution: {integrity: sha512-269Z39MS6wVJtsoUl10L60WdkhJVdPG24Q4eZTH3nnF6lpvSShEK3wQjDX9JRWAUPvPh7COouPpU9IrqaZFvtQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
@@ -892,6 +895,10 @@ packages:
 
   /@mx-space/api-client@1.6.2:
     resolution: {integrity: sha512-NjLj3SQMYoNtcTsl7fyJurkawHBqK8hg7IKdpjl1pEtDL1zpgrReH9YqMfU9so7ywllh/LUncX2xpHKI+OsCOg==}
+    dev: false
+
+  /@mx-space/webhook@0.1.3:
+    resolution: {integrity: sha512-fZ8Rjs5w13caJ+d3cn5aKYbgr8ZZaBUmOi3LNeJSVXtdlkDXzCRgw/fNxFe95q/mogflhmvORIaSI1TX3NLdfQ==}
     dev: false
 
   /@nodelib/fs.scandir@2.1.5:
@@ -2057,7 +2064,7 @@ packages:
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.53.0)
       '@eslint-community/regexpp': 4.8.1
-      '@eslint/eslintrc': 2.1.3
+      '@eslint/eslintrc': 2.1.4
       '@eslint/js': 8.53.0
       '@humanwhocodes/config-array': 0.11.13
       '@humanwhocodes/module-importer': 1.0.1

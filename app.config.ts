@@ -6,6 +6,7 @@ const envSchema = z.object({
   GH_WEBHOOK_SECRET: z.string(),
   MX_SPACE_API_ENDPOINT: z.string().url(),
   MX_SPACE_GATEWAY_ENDPOINT: z.string().url(),
+  MX_SPACE_WEBHOOK_SECRET: z.string(),
 })
 
 console.log('env validating...')
@@ -17,6 +18,8 @@ export const appConfig = {
     gateway: env.MX_SPACE_GATEWAY_ENDPOINT,
     // gateway: 'http://127.0.0.1:2333/system',
     token: env.MX_SPACE_TOKEN,
+
+    webhookSecret: env.MX_SPACE_WEBHOOK_SECRET,
 
     watchGroupIds: [-1001570490524, -1001918532532],
     watchChannelId: -1001918532532,

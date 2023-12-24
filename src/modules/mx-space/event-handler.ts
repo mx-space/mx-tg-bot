@@ -17,25 +17,21 @@ import type { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
 import type { IActivityLike } from './types/activity'
 
 import { LinkState } from '@mx-space/api-client'
+import { BusinessEvents } from '@mx-space/webhook'
 
 import { createNamespaceLogger } from '~/lib/logger'
 import { createSendMessageInstance } from '~/lib/sendable'
-import { getShortDateTime, relativeTimeFromNow } from '~/lib/time'
+import { relativeTimeFromNow } from '~/lib/time'
 
 import { apiClient } from './api-client'
 import { getMxSpaceAggregateData } from './data'
-import {
-  MxSocketEventTypes,
-  MxSystemEventBusEvents,
-} from './types/mx-socket-types'
 import { TgQueryType } from './types/tg-query'
 import { urlBuilder } from './utils'
 
 const logger = createNamespaceLogger('mx-event')
 
 export const handleEvent =
-  (ctx: ModuleContext) =>
-  async (type: MxSocketEventTypes | MxSystemEventBusEvents, payload: any) => {
+  (ctx: ModuleContext) => async (type: BusinessEvents, payload: any) => {
     logger.debug(type, payload)
 
     const aggregateData = await getMxSpaceAggregateData()
@@ -51,14 +47,14 @@ export const handleEvent =
     }
 
     switch (type) {
-      case MxSocketEventTypes.POST_CREATE:
-      case MxSocketEventTypes.POST_UPDATE: {
-        const isNew = type === MxSocketEventTypes.POST_CREATE
+      case BusinessEvents.POST_CREATE:
+      case BusinessEvents.POST_UPDATE: {
+        const isNew = type === BusinessEvents.POST_CREATE
         const publishDescription = isNew ? '发布了新文章' : '更新了文章'
         const { title, text, category, id, summary, created } =
           payload as PostModel
 
-        if (type === MxSocketEventTypes.POST_UPDATE) {
+        if (type === BusinessEvents.POST_UPDATE) {
           // only emit created date after 90 days
           const createdDate = dayjs(created)
           const now = dayjs()
@@ -87,7 +83,7 @@ export const handleEvent =
 
         return
       }
-      case MxSocketEventTypes.NOTE_CREATE: {
+      case BusinessEvents.NOTE_CREATE: {
         const publishDescription = '发布了新生活观察日记'
         const { title, text, mood, weather, images, hide, password } =
           payload as NoteModel
@@ -123,7 +119,7 @@ export const handleEvent =
         return
       }
 
-      case MxSocketEventTypes.LINK_APPLY: {
+      case BusinessEvents.LINK_APPLY: {
         const { avatar, name, url, description, state } = payload as LinkModel
         if (state !== LinkState.Audit) {
           return
@@ -149,7 +145,7 @@ export const handleEvent =
         await sendToGroup(sendable)
         return
       }
-      case MxSocketEventTypes.COMMENT_CREATE: {
+      case BusinessEvents.COMMENT_CREATE: {
         const { author, text, refType, parent, id, isWhispers } =
           payload as CommentModel
         const siteTitle = aggregateData.seo.title
@@ -259,7 +255,7 @@ export const handleEvent =
         }
         return
       }
-      case MxSocketEventTypes.SAY_CREATE: {
+      case BusinessEvents.SAY_CREATE: {
         const { author, source, text } = payload as SayModel
 
         const message =
@@ -269,7 +265,7 @@ export const handleEvent =
 
         return
       }
-      case MxSocketEventTypes.RECENTLY_CREATE: {
+      case BusinessEvents.RECENTLY_CREATE: {
         const { content } = payload as RecentlyModel
 
         const message = `${owner.name} 发布一条动态说：\n${content}`
@@ -278,7 +274,7 @@ export const handleEvent =
         return
       }
 
-      case MxSocketEventTypes.ACTIVITY_LIKE: {
+      case BusinessEvents.ACTIVITY_LIKE: {
         const {
           ref: { id, title },
         } = payload as IActivityLike
@@ -304,17 +300,17 @@ export const handleEvent =
 
         return
       }
-      case MxSystemEventBusEvents.SystemException: {
-        const { message, stack } = payload as Error
-        const messageWithStack = `来自 Mix Space 的系统异常：${getShortDateTime(
-          new Date(),
-        )}\n${message}\n\n${stack}`
-        await ctx.tgBot.telegram.sendMessage(
-          appConfig.ownerId,
-          messageWithStack,
-        )
-        return
-      }
+      // case MxSystemEventBusEvents.SystemException: {
+      //   const { message, stack } = payload as Error
+      //   const messageWithStack = `来自 Mix Space 的系统异常：${getShortDateTime(
+      //     new Date(),
+      //   )}\n${message}\n\n${stack}`
+      //   await ctx.tgBot.telegram.sendMessage(
+      //     appConfig.ownerId,
+      //     messageWithStack,
+      //   )
+      //   return
+      // }
     }
   }
 

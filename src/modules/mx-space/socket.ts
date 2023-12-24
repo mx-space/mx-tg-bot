@@ -1,6 +1,6 @@
 import { appConfig } from 'app.config'
 import { io } from 'socket.io-client'
-import type { MxSocketEventTypes } from '~/modules/mx-space/types/mx-socket-types'
+import type { BusinessEvents } from '@mx-space/webhook'
 import type { ModuleContext } from '~/types/context'
 import type { Socket } from 'socket.io-client'
 
@@ -62,10 +62,10 @@ export function createMxSocket(ctx: ModuleContext): Socket<any, any> {
       }
       const { data, type } = JSON.parse(payload) as {
         data: any
-        type: MxSocketEventTypes
+        type: BusinessEvents
         code?: number
       }
-      handleEvent(ctx)(type, simpleCamelcaseKeys(data))
+      handleEvent(ctx)(type as any, simpleCamelcaseKeys(data))
     },
   )
 

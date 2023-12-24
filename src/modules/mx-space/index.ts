@@ -9,6 +9,8 @@ import type { Telegraf } from 'telegraf'
 import type { Context } from 'telegraf/typings/context'
 import type { Message, Update } from 'telegraf/typings/core/types/typegram'
 
+import { createHandler } from '@mx-space/webhook'
+
 import { botEventBus } from '~/bot/emitter'
 import { escapeMarkdown } from '~/lib/helper'
 import { createNamespaceLogger } from '~/lib/logger'
@@ -18,16 +20,33 @@ import { relativeTimeFromNow } from '~/lib/time'
 import { apiClient } from './api-client'
 import { fetchHitokoto } from './api/hitokoto'
 import { getMxSpaceAggregateData } from './data'
-import { createMxSocket } from './socket'
+import { handleEvent } from './event-handler'
 import { TgQueryType } from './types/tg-query'
 import { urlBuilder } from './utils'
 
 export const register: PluginFunction = async (ctx) => {
   const { tgBot } = ctx
 
-  const socket = createMxSocket(ctx)
+  // const socket = createMxSocket(ctx)
 
-  socket.connect()
+  const handler = createHandler({
+    secret: appConfig.mxSpace.webhookSecret,
+  })
+
+  ctx.server.post('/mx/webhook', (req, res) => {
+    Object.assign(req.raw, {
+      body: req.body,
+    })
+    handler(req.raw, res.raw)
+  })
+
+  handler.emitter.on('*', (event) => {
+    const { payload, type } = event
+
+    handleEvent(ctx)(type, payload)
+  })
+
+  // socket.connect()
   await Promise.all([
     bindEvents(tgBot),
     bindCommands(tgBot),
