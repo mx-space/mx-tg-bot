@@ -1,3 +1,4 @@
+import { inspect } from 'util'
 import { appConfig } from 'app.config'
 import dayjs from 'dayjs'
 import { default as RemoveMarkdown, default as rmd } from 'remove-markdown'
@@ -32,7 +33,7 @@ const logger = createNamespaceLogger('mx-event')
 
 export const handleEvent =
   (ctx: ModuleContext) => async (type: BusinessEvents, payload: any) => {
-    logger.debug(type, payload)
+    logger.log(type, inspect(payload))
 
     const aggregateData = await getMxSpaceAggregateData()
     const owner = aggregateData.user
