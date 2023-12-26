@@ -165,6 +165,7 @@ export const handleEvent =
           return walk(parent)
         })()
         if (parentIsWhispers) {
+          logger.warn('[comment]: parent comment is whispers, ignore')
           return
         }
 
@@ -188,6 +189,7 @@ export const handleEvent =
         }
 
         if (!refModel) {
+          logger.error(`[comment]: ref model not found, refId: ${refId}`)
           return
         }
         const isMaster = author === owner.name || author === owner.username
