@@ -17,7 +17,7 @@ import type { ModuleContext } from '~/types/context'
 import type { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
 import type { IActivityLike } from './types/activity'
 
-import { LinkState } from '@mx-space/api-client'
+import { CollectionRefTypes, LinkState } from '@mx-space/api-client'
 import { BusinessEvents } from '@mx-space/webhook'
 
 import { createNamespaceLogger } from '~/lib/logger'
@@ -173,16 +173,17 @@ export const handleEvent =
         let refModel: PostModel | NoteModel | PageModel | null = null
 
         switch (refType) {
-          case 'Post': {
+          case CollectionRefTypes.Post: {
             refModel = await apiClient.post.getPost(refId)
             break
           }
-          case 'Note': {
+
+          case CollectionRefTypes.Note: {
             refModel = await apiClient.note.getNoteById(refId as string)
 
             break
           }
-          case 'Page': {
+          case CollectionRefTypes.Page: {
             refModel = await apiClient.page.getById(refId)
             break
           }
@@ -204,15 +205,15 @@ export const handleEvent =
 
         const uri = (() => {
           switch (refType) {
-            case 'Post': {
+            case CollectionRefTypes.Post: {
               return `/posts/${(refModel as PostModel).category.slug}/${
                 (refModel as PostModel).slug
               }`
             }
-            case 'Note': {
+            case CollectionRefTypes.Note: {
               return `/notes/${(refModel as NoteModel).nid}`
             }
-            case 'Page': {
+            case CollectionRefTypes.Page: {
               return `/${(refModel as PageModel).slug}`
             }
           }

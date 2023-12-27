@@ -36,8 +36,8 @@ dependencies:
     specifier: 0.3.0
     version: 0.3.0
   '@mx-space/api-client':
-    specifier: 1.6.2
-    version: 1.6.2
+    specifier: 1.7.2
+    version: 1.7.2
   '@mx-space/webhook':
     specifier: 0.1.4
     version: 0.1.4
@@ -893,8 +893,8 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /@mx-space/api-client@1.6.2:
-    resolution: {integrity: sha512-NjLj3SQMYoNtcTsl7fyJurkawHBqK8hg7IKdpjl1pEtDL1zpgrReH9YqMfU9so7ywllh/LUncX2xpHKI+OsCOg==}
+  /@mx-space/api-client@1.7.2:
+    resolution: {integrity: sha512-tTvAYPNeOmb3zJcDVc5RJh66gBOtyVZhz2Z9f72S6PmvDEjFQ5aE3vpF/zVpp2uQ+xiOfuTsNP1FCJsL7n5v5A==}
     dev: false
 
   /@mx-space/webhook@0.1.4:
