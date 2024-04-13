@@ -52,8 +52,7 @@ export const handleEvent =
       case BusinessEvents.POST_UPDATE: {
         const isNew = type === BusinessEvents.POST_CREATE
         const publishDescription = isNew ? '发布了新文章' : '更新了文章'
-        const { title, text, category, id, summary, created } =
-          payload as PostModel
+        const { title, category, id, summary, created } = payload as PostModel
 
         if (type === BusinessEvents.POST_UPDATE) {
           // only emit created date after 90 days
@@ -68,7 +67,7 @@ export const handleEvent =
           logger.error(`category not found, post id: ${id}`)
           return
         }
-        const simplePreview = getSimplePreview(text)
+        const simplePreview = summary
         const url = await urlBuilder.build(payload as PostModel)
         const message = `${
           owner.name
