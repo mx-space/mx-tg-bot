@@ -67,11 +67,9 @@ export const handleEvent =
           logger.error(`category not found, post id: ${id}`)
           return
         }
-        const simplePreview = summary
+
         const url = await urlBuilder.build(payload as PostModel)
-        const message = `${
-          owner.name
-        } ${publishDescription}: ${title}\n\n${simplePreview}\n\n${
+        const message = `${owner.name} ${publishDescription}: ${title}\n\n${
           summary ? `${summary}\n\n` : ''
         }\n前往阅读：${url}`
         await sendToGroup([
