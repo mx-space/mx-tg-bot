@@ -37,13 +37,13 @@ export const register: PluginFunction = async (ctx) => {
     Object.assign(req.raw, {
       body: req.body,
     })
-    handler(req.raw, res.raw)
+    handler(req.raw as any, res.raw)
   })
 
   handler.emitter.on('*', (event) => {
     const { payload, type } = event
 
-    handleEvent(ctx)(type, payload)
+    handleEvent(ctx)(type as any, payload)
   })
 
   // socket.connect()

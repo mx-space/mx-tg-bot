@@ -321,10 +321,10 @@ const getSimplePreview = (text: string) => {
 }
 
 function checkNoteIsSecret(note: NoteModel) {
-  if (!note.secret) {
+  if (!note.publicAt) {
     return false
   }
-  const isSecret = dayjs(note.secret).isAfter(new Date())
+  const isSecret = dayjs(note.publicAt).isAfter(new Date())
 
   return isSecret
 }
