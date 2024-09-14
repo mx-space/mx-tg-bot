@@ -24,7 +24,7 @@ void app.listen({
   host: process.env.SERVER_HOSTNAME ?? '127.0.0.1',
 })
 
-app.ready((err: Error) => {
+app.ready((err) => {
   if (err) {
     app.log.error(err)
     process.exit(1)

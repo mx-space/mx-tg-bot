@@ -62,7 +62,10 @@ async function bindEvents(tgBot: Telegraf) {
       : `${ctx.from.first_name}(${ctx.from.id})`
     ctx.sendMessage(`欢迎新大佬 ${identifier} \n\n${hitokoto}`, {
       parse_mode: 'MarkdownV2',
-      reply_to_message_id: ctx.message.message_id,
+
+      reply_parameters: {
+        message_id: ctx.message.message_id,
+      },
     })
   })
 
@@ -151,7 +154,9 @@ async function bindCommands(tgBot: Telegraf) {
           const result = schema.safeParse({ type, offset: +offset })
           if (!result.success) {
             ctx.reply(result.error.issues.map((v) => v.message).join('\n'), {
-              reply_to_message_id: ctx.message.message_id,
+              reply_parameters: {
+                message_id: ctx.message.message_id,
+              },
             })
             return
           }
