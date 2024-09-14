@@ -22,7 +22,7 @@
     "@fastify/env": "4.4.0",
     "@fastify/etag": "4.2.0",
     "@fastify/helmet": "11.1.1",
-    "@fastify/multipart": "7.7.3",
+    "@fastify/multipart": "8.3.0",
     "@fastify/one-line-logger": "1.4.0",
     "@fastify/rate-limit": "8.1.1",
     "@fastify/sensible": "5.6.0",
