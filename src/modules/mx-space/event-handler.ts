@@ -12,10 +12,10 @@ import type {
   RecentlyModel,
   SayModel,
 } from '@mx-space/api-client'
+import type { IActivityLike } from '@mx-space/webhook'
 import type { Sendable } from '~/lib/sendable'
 import type { ModuleContext } from '~/types/context'
 import type { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
-import type { IActivityLike } from './types/activity'
 
 import { CollectionRefTypes, LinkState } from '@mx-space/api-client'
 import { BusinessEvents } from '@mx-space/webhook'
@@ -278,6 +278,7 @@ export const handleEvent =
       case BusinessEvents.ACTIVITY_LIKE: {
         const {
           ref: { id, title },
+          reader,
         } = payload as IActivityLike
 
         // '/url-builder/:id'
@@ -290,7 +291,9 @@ export const handleEvent =
 
         await ctx.tgBot.telegram.sendMessage(
           appConfig.mxSpace.watchChannelId,
-          `「${title}」有人点赞了哦！\n`,
+          reader
+            ? `${reader.name} 点赞了「${title}」\n`
+            : `「${title}」有人点赞了哦！\n`,
           Markup.inlineKeyboard([
             {
               url: refModelUrl,
