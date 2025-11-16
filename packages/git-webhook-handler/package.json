@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/node": "20.19.23",
     "run-series": "1.1.9",
-    "standard": "14.3.4",
+    "standard": "17.1.2",
     "tape": "4.17.0",
     "through2": "3.0.2"
   }
