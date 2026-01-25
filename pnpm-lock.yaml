@@ -124,8 +124,8 @@ importers:
         specifier: 4.17.20
         version: 4.17.20
       '@types/marked':
-        specifier: 5.0.2
-        version: 5.0.2
+        specifier: 6.0.0
+        version: 6.0.0
       '@types/node':
         specifier: 20.19.23
         version: 20.19.23
@@ -607,8 +607,9 @@ packages:
   '@types/luxon@3.3.2':
     resolution: {integrity: sha512-l5cpE57br4BIjK+9BSkFBOsWtwv6J9bJpC7gdXIzZyI0vuKvNTk0wZZrkQxMGsUAuGW9+WMNWF2IJMD7br2yeQ==}
 
-  '@types/marked@5.0.2':
-    resolution: {integrity: sha512-OucS4KMHhFzhz27KxmWg7J+kIYqyqoW5kdIEI319hqARQQUTqhao3M/F+uFnDXD0Rg72iDDZxZNxq5gvctmLlg==}
+  '@types/marked@6.0.0':
+    resolution: {integrity: sha512-jmjpa4BwUsmhxcfsgUit/7A9KbrC48Q0q8KvnY107ogcjGgTFDlIL3RpihNpx2Mu1hM4mdFQjoVc4O6JoGKHsA==}
+    deprecated: This is a stub types definition. marked provides its own type definitions, so you do not need this installed.
 
   '@types/node-telegram-bot-api@0.64.12':
     resolution: {integrity: sha512-R2g/aJQxcRIOn5nYiuFQid4L/yFbIRsdrhxtijESa1cwAmJq7J+l1ZwXTCNaYyZg+WURd3eLF+htux8Hvwqu2w==}
@@ -3244,7 +3245,9 @@ snapshots:
 
   '@types/luxon@3.3.2': {}
 
-  '@types/marked@5.0.2': {}
+  '@types/marked@6.0.0':
+    dependencies:
+      marked: 5.1.2
 
   '@types/node-telegram-bot-api@0.64.12':
     dependencies:
