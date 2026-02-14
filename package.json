@@ -37,7 +37,7 @@
     "cron": "2.4.4",
     "dayjs": "1.11.18",
     "dotenv": "16.6.1",
-    "fastify": "4.29.1",
+    "fastify": "5.7.3",
     "fastify-cli": "5.9.0",
     "fastify-plugin": "4.5.1",
     "fastify-tsconfig": "1.0.1",
