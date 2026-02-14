@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@innei/eslint-config-ts": "0.15.0",
-    "@innei/prettier": "0.15.0",
+    "@innei/prettier": "1.0.0",
     "@types/cron": "2.4.3",
     "@types/lodash": "4.17.20",
     "@types/marked": "5.0.2",
