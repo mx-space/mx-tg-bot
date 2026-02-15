@@ -64,7 +64,7 @@
     "@types/remove-markdown": "0.3.4",
     "cross-env": "7.0.3",
     "eslint": "8.57.1",
-    "fast-json-stringify": "5.16.1",
+    "fast-json-stringify": "6.3.0",
     "lint-staged": "13.3.0",
     "prettier": "3.6.2",
     "ts-node": "10.9.2",
