@@ -1,20 +1,21 @@
-import { appConfig } from 'app.config'
-import { io } from 'socket.io-client'
-import type { BusinessEvents } from '@mx-space/webhook'
-import type { ModuleContext } from '~/types/context'
-import type { Socket } from 'socket.io-client'
+import { appConfig } from "app.config";
+import { io } from "socket.io-client";
+import type { BusinessEvents } from "@mx-space/webhook";
+import type { ModuleContext } from "~/types/context";
+import type { Socket } from "socket.io-client";
 
-import { simpleCamelcaseKeys } from '@mx-space/api-client'
+import { simpleCamelcaseKeys } from "@mx-space/api-client";
 
-import { createNamespaceLogger } from '~/lib/logger'
+import { createNamespaceLogger } from "~/lib/logger";
 
-import { handleEvent } from './event-handler'
+import { handleEvent } from "./event-handler";
 
-const logger = createNamespaceLogger('mx-socket')
+const logger = createNamespaceLogger("mx-socket");
 
 export function createMxSocket(ctx: ModuleContext): Socket<any, any> {
+  const dispatchEvent = handleEvent(ctx);
   const mxSocket = io(appConfig.mxSpace.gateway, {
-    transports: ['websocket'],
+    transports: ["websocket"],
     timeout: 10000,
     forceNew: true,
     query: {
@@ -22,52 +23,52 @@ export function createMxSocket(ctx: ModuleContext): Socket<any, any> {
     },
 
     autoConnect: false,
-  })
+  });
 
-  mxSocket.io.on('error', () => {
-    logger.error('Socket 连接异常')
-  })
-  mxSocket.io.on('reconnect', () => {
-    logger.info('Socket 重连成功')
-  })
-  mxSocket.io.on('reconnect_attempt', () => {
-    logger.info('Socket 重连中')
-  })
-  mxSocket.io.on('reconnect_failed', () => {
-    logger.info('Socket 重连失败')
-  })
+  mxSocket.io.on("error", () => {
+    logger.error("Socket 连接异常");
+  });
+  mxSocket.io.on("reconnect", () => {
+    logger.info("Socket 重连成功");
+  });
+  mxSocket.io.on("reconnect_attempt", () => {
+    logger.info("Socket 重连中");
+  });
+  mxSocket.io.on("reconnect_failed", () => {
+    logger.info("Socket 重连失败");
+  });
 
-  mxSocket.on('disconnect', () => {
+  mxSocket.on("disconnect", () => {
     const tryReconnect = () => {
       if (mxSocket.connected === false) {
-        mxSocket.io.connect()
+        mxSocket.io.connect();
       } else {
-        timer = clearInterval(timer)
+        timer = clearInterval(timer);
       }
-    }
-    let timer: any = setInterval(tryReconnect, 2000)
-  })
+    };
+    let timer: any = setInterval(tryReconnect, 2000);
+  });
 
-  mxSocket.on('connect_error', () => {
+  mxSocket.on("connect_error", () => {
     setTimeout(() => {
-      mxSocket.connect()
-    }, 1000)
-  })
+      mxSocket.connect();
+    }, 1000);
+  });
 
   mxSocket.on(
-    'message',
-    (payload: string | Record<'type' | 'data' | 'code', any>) => {
-      if (typeof payload !== 'string') {
-        return handleEvent(ctx)(payload.type, simpleCamelcaseKeys(payload.data))
+    "message",
+    (payload: string | Record<"type" | "data" | "code", any>) => {
+      if (typeof payload !== "string") {
+        return dispatchEvent(payload.type, simpleCamelcaseKeys(payload.data));
       }
       const { data, type } = JSON.parse(payload) as {
-        data: any
-        type: BusinessEvents
-        code?: number
-      }
-      handleEvent(ctx)(type as any, simpleCamelcaseKeys(data))
+        data: any;
+        type: BusinessEvents;
+        code?: number;
+      };
+      dispatchEvent(type as any, simpleCamelcaseKeys(data));
     },
-  )
+  );
 
-  return mxSocket
+  return mxSocket;
 }

@@ -1,86 +1,99 @@
-import { Markup } from 'telegraf'
-import type { Telegraf } from 'telegraf'
+import { Markup } from "telegraf";
+import type { Telegraf } from "telegraf";
 
 interface TextMessage {
-  type: 'text' | 'Markdown' | 'HTML' | 'MarkdownV2'
-  content: string
+  type: "text" | "Markdown" | "HTML" | "MarkdownV2";
+  content: string;
 }
 interface MediaMessage {
-  type: 'photo'
-  url: string[]
+  type: "photo";
+  url: string[];
 
-  caption?: string
+  caption?: string;
 }
 export interface URLKeyboardMessage {
-  type: 'url'
-  label: string
-  url: string
+  type: "url";
+  label: string;
+  url: string;
 }
-type IMessage = TextMessage | MediaMessage | URLKeyboardMessage
-export type Sendable = string | IMessage[]
+type IMessage = TextMessage | MediaMessage | URLKeyboardMessage;
+export type Sendable = string | IMessage[];
+type SendMessage = (chatId: number, message: Sendable) => Promise<unknown>;
 
 export const createSendMessageInstance =
-  (tgBot: Telegraf) => (chatId: number, message: Sendable) => {
-    if (typeof message === 'string') {
-      tgBot.telegram.sendMessage(chatId, message)
-      return
+  (tgBot: Telegraf): SendMessage =>
+  async (chatId: number, message: Sendable) => {
+    if (typeof message === "string") {
+      return tgBot.telegram.sendMessage(chatId, message);
     }
-    const keyboardMessage = [] as URLKeyboardMessage[]
+    const keyboardMessage = [] as URLKeyboardMessage[];
     const filteredMessage = message.filter((msg) => {
-      if (msg.type === 'url') {
-        keyboardMessage.push(msg)
-        return false
+      if (msg.type === "url") {
+        keyboardMessage.push(msg);
+        return false;
       }
-      return true
-    })
+      return true;
+    });
+
+    const tasks = [] as Promise<unknown>[];
 
     for (const msg of filteredMessage) {
       switch (msg.type) {
-        case 'text':
-          tgBot.telegram.sendMessage(
-            chatId,
-            msg.content,
-            Markup.inlineKeyboard([
-              ...keyboardMessage.map((msg) => {
-                return Markup.button.url(msg.label, msg.url)
-              }),
-            ]),
-          )
-          continue
-        case 'HTML':
-        case 'Markdown':
-        case 'MarkdownV2':
-          if (keyboardMessage.length > 0) {
+        case "text":
+          tasks.push(
             tgBot.telegram.sendMessage(
               chatId,
               msg.content,
               Markup.inlineKeyboard([
                 ...keyboardMessage.map((msg) => {
-                  return Markup.button.url(msg.label, msg.url)
+                  return Markup.button.url(msg.label, msg.url);
                 }),
               ]),
-            )
+            ),
+          );
+          continue;
+        case "HTML":
+        case "Markdown":
+        case "MarkdownV2":
+          if (keyboardMessage.length > 0) {
+            tasks.push(
+              tgBot.telegram.sendMessage(
+                chatId,
+                msg.content,
+                Markup.inlineKeyboard([
+                  ...keyboardMessage.map((msg) => {
+                    return Markup.button.url(msg.label, msg.url);
+                  }),
+                ]),
+              ),
+            );
           } else {
-            tgBot.telegram.sendMessage(chatId, msg.content, {
-              parse_mode: msg.type,
-            })
+            tasks.push(
+              tgBot.telegram.sendMessage(chatId, msg.content, {
+                parse_mode: msg.type,
+              }),
+            );
           }
-          continue
+          continue;
 
-        case 'photo': {
-          const { url, caption = '' } = msg
-          tgBot.telegram.sendMediaGroup(
-            chatId,
-            url.map((u, i) => {
-              return {
-                type: 'photo',
-                media: u,
-                caption: i === 0 ? caption : undefined,
-              }
-            }),
-          )
-          break
+        case "photo": {
+          const { url, caption = "" } = msg;
+          tasks.push(
+            tgBot.telegram.sendMediaGroup(
+              chatId,
+              url.map((u, i) => {
+                return {
+                  type: "photo",
+                  media: u,
+                  caption: i === 0 ? caption : undefined,
+                };
+              }),
+            ),
+          );
+          break;
         }
       }
     }
-  }
+
+    return Promise.all(tasks);
+  };
