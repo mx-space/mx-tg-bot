@@ -42,8 +42,8 @@ importers:
         specifier: 1.17.0
         version: 1.17.0
       '@mx-space/webhook':
-        specifier: 0.5.0
-        version: 0.5.0
+        specifier: 0.7.1
+        version: 0.7.1
       '@tanstack/query-core':
         specifier: 4.41.0
         version: 4.41.0
@@ -552,8 +552,9 @@ packages:
   '@mx-space/api-client@1.17.0':
     resolution: {integrity: sha512-Di669k6wwGmvGohJpmUfQdOoIUCxlM7PqKRK4unqgIPf7C73xF7I6cjkiPYTibG9j7a2vQ2AwYBwywKIC0e0eg==}
 
-  '@mx-space/webhook@0.5.0':
-    resolution: {integrity: sha512-mgDaMHZlD/8kyOY34K7D9q1ifsHNVjqLxNZdpJi6O90uoQlb6f5/aMU5jj52QK0Ua8pzaemtFT+tC4qnEKrE4A==}
+  '@mx-space/webhook@0.7.1':
+    resolution: {integrity: sha512-6NYZRJ2LR7rrBgD2AGLmhEUAgaoKpypGrzH6i+ZFQU3RtKubAzNMLPtPCyncxGMYjHfgdlqP1HPZoR2cHRZ1XA==}
+    engines: {node: '>=22'}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -3192,7 +3193,7 @@ snapshots:
 
   '@mx-space/api-client@1.17.0': {}
 
-  '@mx-space/webhook@0.5.0': {}
+  '@mx-space/webhook@0.7.1': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:

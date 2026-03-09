@@ -1,6 +1,5 @@
 import { appConfig } from "app.config";
 import { io } from "socket.io-client";
-import type { BusinessEvents } from "@mx-space/webhook";
 import type { ModuleContext } from "~/types/context";
 import type { Socket } from "socket.io-client";
 
@@ -9,6 +8,7 @@ import { simpleCamelcaseKeys } from "@mx-space/api-client";
 import { createNamespaceLogger } from "~/lib/logger";
 
 import { handleEvent } from "./event-handler";
+import type { WebhookEventSource } from "@mx-space/webhook";
 
 const logger = createNamespaceLogger("mx-socket");
 
@@ -57,16 +57,20 @@ export function createMxSocket(ctx: ModuleContext): Socket<any, any> {
 
   mxSocket.on(
     "message",
-    (payload: string | Record<"type" | "data" | "code", any>) => {
-      if (typeof payload !== "string") {
-        return dispatchEvent(payload.type, simpleCamelcaseKeys(payload.data));
-      }
-      const { data, type } = JSON.parse(payload) as {
-        data: any;
-        type: BusinessEvents;
-        code?: number;
+    (payload: string | Record<"type" | "data" | "code" | "source", any>) => {
+      const parseMessage = (raw: {
+        type: string;
+        data?: any;
+        source?: WebhookEventSource;
+      }) => {
+        const data = simpleCamelcaseKeys(raw.data ?? {});
+        const source = raw.source ?? "system";
+        return dispatchEvent(raw.type as any, data, source);
       };
-      dispatchEvent(type as any, simpleCamelcaseKeys(data));
+      if (typeof payload !== "string") {
+        return parseMessage(payload);
+      }
+      return parseMessage(JSON.parse(payload));
     },
   );
 

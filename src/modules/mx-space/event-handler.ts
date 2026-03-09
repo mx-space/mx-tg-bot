@@ -1,6 +1,6 @@
 import { inspect } from "util";
 import { appConfig } from "app.config";
-import type { BusinessEvents } from "@mx-space/webhook";
+import type { BusinessEvents, WebhookEventSource } from "@mx-space/webhook";
 import type { Sendable } from "~/lib/sendable";
 import type { ModuleContext } from "~/types/context";
 
@@ -21,7 +21,10 @@ const isHandledEvent = (type: BusinessEvents): type is HandledMxEvent => {
   return Object.prototype.hasOwnProperty.call(mxEventHandlers, type);
 };
 
-const createMxEventRuntime = (ctx: ModuleContext): MxEventRuntime => {
+const createMxEventRuntime = (
+  ctx: ModuleContext,
+  source: WebhookEventSource,
+): MxEventRuntime => {
   const sender = createSendMessageInstance(ctx.tgBot);
   const aggregateDataPromise = getMxSpaceAggregateData();
 
@@ -41,14 +44,18 @@ const createMxEventRuntime = (ctx: ModuleContext): MxEventRuntime => {
     getAggregateData: () => aggregateDataPromise,
     sendToGroup,
     sendToOwner,
+    source,
   };
 };
 
 export const handleEvent = (ctx: ModuleContext) => {
-  const runtime = createMxEventRuntime(ctx);
-
-  return async (type: BusinessEvents, payload: unknown) => {
-    logger.log(type, inspect(payload));
+  return async (
+    type: BusinessEvents,
+    payload: unknown,
+    source: WebhookEventSource,
+  ) => {
+    const runtime = createMxEventRuntime(ctx, source);
+    logger.log(type, `source: ${source}`, inspect(payload));
 
     if (!isHandledEvent(type)) {
       return;

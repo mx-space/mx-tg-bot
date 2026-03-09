@@ -7,7 +7,7 @@ import type { PluginFunction } from "~/lib/plugin";
 import type { Telegraf } from "telegraf";
 import type { Message, Update } from "telegraf/typings/core/types/typegram";
 
-import { createHandler } from "@mx-space/webhook";
+import { createHandler, type WebhookEventSource } from "@mx-space/webhook";
 
 import { escapeMarkdown } from "~/lib/helper";
 import { createNamespaceLogger } from "~/lib/logger";
@@ -40,8 +40,10 @@ export const register: PluginFunction = async (ctx) => {
 
   handler.emitter.on("*", (event) => {
     const { payload, type } = event;
+    const source =
+      (event as { source?: WebhookEventSource }).source ?? "system";
 
-    dispatchEvent(type as any, payload);
+    dispatchEvent(type as any, payload, source);
   });
 
   // socket.connect()
