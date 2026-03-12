@@ -174,7 +174,7 @@ export const handleCommentCreate: MxEventHandler<
     url,
   };
 
-  if (payload.source === "admin") {
+  if (runtime.source === "admin") {
     await deliverAdminComment(runtime, delivery);
     return;
   }

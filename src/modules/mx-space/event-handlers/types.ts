@@ -17,9 +17,7 @@ import type { ModuleContext } from "~/types/context";
 
 import type { getMxSpaceAggregateData } from "../data";
 
-export type CommentEventPayload = CommentModel & {
-  source?: "admin" | "visitor";
-};
+export type CommentEventPayload = CommentModel;
 
 export interface MxEventRuntime {
   ctx: ModuleContext;
