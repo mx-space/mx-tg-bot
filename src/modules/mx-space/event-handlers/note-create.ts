@@ -23,14 +23,14 @@ export const handleNoteCreate: MxEventHandler<
   BusinessEvents.NOTE_CREATE
 > = async (runtime, payload) => {
   const owner = (await runtime.getAggregateData()).user;
-  const { title, text, mood, weather, images, hide, password } = payload;
+  const { title, text, mood, weather, images, password } = payload;
   const isSecret = checkNoteIsSecret(payload.publicAt);
 
-  if (hide || password || isSecret) {
+  if (password || isSecret) {
     return;
   }
 
-  const simplePreview = getSimplePreview(text);
+  const simplePreview = getSimplePreview(text || "");
   const status = [mood ? `心情: ${mood}` : ""]
     .concat(weather ? `天气: ${weather}` : "")
     .filter(Boolean)

@@ -39,11 +39,11 @@ importers:
         specifier: 0.4.0
         version: 0.4.0
       '@mx-space/api-client':
-        specifier: 1.17.0
-        version: 1.17.0
+        specifier: 2.4.0
+        version: 2.4.0
       '@mx-space/webhook':
-        specifier: 0.7.1
-        version: 0.7.1
+        specifier: 0.8.0
+        version: 0.8.0
       '@tanstack/query-core':
         specifier: 4.41.0
         version: 4.41.0
@@ -549,11 +549,12 @@ packages:
     resolution: {integrity: sha512-Xs/4RZltsAL7pkvaNStUQt7netTkyxrS0K+RILcVr3TRMS/ToOg4I6uNfhB9SlGsnWBym4U+EaXq0f0cEMNkHA==}
     engines: {node: '>=8'}
 
-  '@mx-space/api-client@1.17.0':
-    resolution: {integrity: sha512-Di669k6wwGmvGohJpmUfQdOoIUCxlM7PqKRK4unqgIPf7C73xF7I6cjkiPYTibG9j7a2vQ2AwYBwywKIC0e0eg==}
+  '@mx-space/api-client@2.4.0':
+    resolution: {integrity: sha512-72TlkdX+NbZCRu0rFZ84QCFu5CRBW0yrjL5QgbCqOo9m2gnm0j66ECvkaPBT8mgcOZgAkMrncHeDfZWuajmdeQ==}
+    engines: {node: '>=22'}
 
-  '@mx-space/webhook@0.7.1':
-    resolution: {integrity: sha512-6NYZRJ2LR7rrBgD2AGLmhEUAgaoKpypGrzH6i+ZFQU3RtKubAzNMLPtPCyncxGMYjHfgdlqP1HPZoR2cHRZ1XA==}
+  '@mx-space/webhook@0.8.0':
+    resolution: {integrity: sha512-LjxmjqiDXrhMtpq8MCZxyl2dlKTTi8b9q4TnvQ6ZjNm2UOrFaeyv6ZDmmt+cUb0JAilEjj+3HPOBIl46YeHW1Q==}
     engines: {node: '>=22'}
 
   '@nodelib/fs.scandir@2.1.5':
@@ -856,12 +857,14 @@ packages:
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   autocorrect-node-linux-x64-musl@2.11.1:
     resolution: {integrity: sha512-Hml5ZRdZMqpeM1p/j7TVy6xdv0+I5yxpRBAMCIkYJp6Le/NIz9EkEP9eYFxHOwdL+MexXvOd/1xSeHEjUL6JDw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   autocorrect-node-win32-x64-msvc@2.11.1:
     resolution: {integrity: sha512-1Cx2iI0eVz/tLyjnkaDx0uH+fXMRxV16tEjbnX0mWPV+LVp2KM5zqYYuzsSkm6f9O6dOFWGUn0ybKZ4QpZb/Dg==}
@@ -3191,9 +3194,9 @@ snapshots:
 
   '@lukeed/ms@2.0.1': {}
 
-  '@mx-space/api-client@1.17.0': {}
+  '@mx-space/api-client@2.4.0': {}
 
-  '@mx-space/webhook@0.7.1': {}
+  '@mx-space/webhook@0.8.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:

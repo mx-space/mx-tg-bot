@@ -31,15 +31,6 @@ interface CommentDeliveryContext {
   url?: string;
 }
 
-const isParentWhispers = (parent: unknown): boolean => {
-  if (!parent || typeof parent === "string") {
-    return false;
-  }
-
-  const current = parent as { isWhispers?: boolean; parent?: unknown };
-  return Boolean(current.isWhispers) || isParentWhispers(current.parent);
-};
-
 const getCommentRefId = (payload: CommentEventPayload) => {
   const ref = payload.ref as any;
 
@@ -69,7 +60,8 @@ const buildCommentMessage = (
   ownerName: string,
   ownerUsername?: string,
 ) => {
-  const { author, text, parent } = payload;
+  const { author, text } = payload;
+  const parent = "parent" in payload ? payload.parent : undefined;
   const isMaster = author === ownerName || author === ownerUsername;
 
   if (isMaster && !parent) {
@@ -145,11 +137,6 @@ const deliverVisitorComment = async (
 export const handleCommentCreate: MxEventHandler<
   BusinessEvents.COMMENT_CREATE
 > = async (runtime, payload) => {
-  if (isParentWhispers(payload.parent)) {
-    runtime.logger.warn("[comment]: parent comment is whispers, ignore");
-    return;
-  }
-
   const aggregateData = await runtime.getAggregateData();
   const refId = getCommentRefId(payload);
   const refModel = await resolveCommentRef(payload);

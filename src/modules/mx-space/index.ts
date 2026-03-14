@@ -85,12 +85,9 @@ async function bindEvents(tgBot: Telegraf) {
     const toCommentId = getCommentReplyTarget(chatId, replyToMessageId);
     if (!toCommentId) return;
 
-    await apiClient.comment.proxy.master
-      .reply(toCommentId)
-      .post({
-        data: {
-          text,
-        },
+    await apiClient.comment
+      .readerReply(toCommentId, {
+        text,
       })
       .then(() => {
         ctx.reply("回复成功！");
@@ -141,7 +138,9 @@ async function bindCommands(tgBot: Telegraf) {
 
             markup = `[${escapeMarkdown(
               postDetail.title,
-            )}](${url})\n\n${escapeMarkdown(RemoveMarkdown(postDetail.text))
+            )}](${url})\n\n${escapeMarkdown(
+              RemoveMarkdown(postDetail.text || ""),
+            )
               .split("\n\n")
               .slice(0, 3)
               .join("\n\n")}\n\n[阅读全文](${escapeMarkdown(url)})`;
@@ -156,7 +155,9 @@ async function bindCommands(tgBot: Telegraf) {
             const url = await urlBuilder.build(noteDetail);
             markup = `[${escapeMarkdown(
               noteDetail.title,
-            )}](${url})\n\n${escapeMarkdown(RemoveMarkdown(noteDetail.text))
+            )}](${url})\n\n${escapeMarkdown(
+              RemoveMarkdown(noteDetail.text || ""),
+            )
               .split("\n\n")
               .slice(0, 3)
               .join("\n\n")}\n\n[阅读全文](${escapeMarkdown(url)})`;

@@ -1,5 +1,4 @@
 import type {
-  CommentModel,
   LinkModel,
   NoteModel,
   PostModel,
@@ -9,6 +8,7 @@ import type {
 import type {
   IActivityLike,
   BusinessEvents,
+  EventPayloadMapping,
   WebhookEventSource,
 } from "@mx-space/webhook";
 import type { Sendable } from "~/lib/sendable";
@@ -17,7 +17,8 @@ import type { ModuleContext } from "~/types/context";
 
 import type { getMxSpaceAggregateData } from "../data";
 
-export type CommentEventPayload = CommentModel;
+export type CommentEventPayload =
+  EventPayloadMapping[BusinessEvents.COMMENT_CREATE];
 
 export interface MxEventRuntime {
   ctx: ModuleContext;
