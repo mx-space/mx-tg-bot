@@ -14,7 +14,6 @@ import multipartPlugin from "./plugins/multipart";
 import ratelimitPlugin from "./plugins/ratelimit";
 import sensiblePlugin from "./plugins/sensible";
 
-import exampleRoutes from "./routes/example";
 import rootRoutes from "./routes/root";
 
 const app: FastifyPluginAsync = async (fastify): Promise<void> => {
@@ -39,7 +38,6 @@ const app: FastifyPluginAsync = async (fastify): Promise<void> => {
 
   // Routes
   await fastify.register(rootRoutes);
-  await fastify.register(exampleRoutes, { prefix: "/example" });
 };
 
 export default app;
