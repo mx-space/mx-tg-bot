@@ -1,32 +1,23 @@
-import fs from "fs";
-import { readdir } from "fs/promises";
-import { resolve } from "path";
-
 import { createNamespaceLogger } from "~/lib/logger";
 import { hook } from "~/lib/plugin";
 
+import { register as bilibiliRegister } from "./bilibili";
+import { register as githubRegister } from "./github";
+import { register as mxSpaceRegister } from "./mx-space";
+import { register as utilsRegister } from "./utils";
+
 const logger = createNamespaceLogger("module-loader");
 
-export const registerModules = async () => {
-  const modules = await readdir(resolve(__dirname));
+const modules = [
+  { name: "bilibili", register: bilibiliRegister },
+  { name: "github", register: githubRegister },
+  { name: "mx-space", register: mxSpaceRegister },
+  { name: "utils", register: utilsRegister },
+];
 
-  modules.forEach((moduleName) => {
-    // 跳过禁用的组件
-    if (moduleName.startsWith("_")) return;
-
-    const modulePath = resolve(__dirname, moduleName);
-
-    if (!fs.statSync(modulePath).isDirectory()) {
-      return;
-    }
-
-    logger.log(`register module: ${moduleName}`);
-    try {
-      const { register } = require(modulePath);
-      hook.register(register);
-    } catch (err) {
-      logger.error(`register module: ${moduleName} failed`);
-      logger.error(err);
-    }
-  });
+export const registerModules = () => {
+  for (const mod of modules) {
+    logger.log(`register module: ${mod.name}`);
+    hook.register(mod.register);
+  }
 };

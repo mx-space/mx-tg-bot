@@ -1,29 +1,27 @@
 {
+  "type": "module",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "build:ts": "tsc",
+    "build": "tsdown",
     "dev": "npm run dev:watch",
     "dev:watch": "NODE_ENV=development tsx watch src/server.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "prepare": "husky install",
     "start": "tsx src/server.ts",
-    "start:prod": "NODE_ENV=production TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./dist/src/server.js",
-    "typecheck": "tsc -b"
+    "start:prod": "NODE_ENV=production node dist/server.mjs",
+    "typecheck": "tsc --noEmit"
   },
   "lint-staged": {
     "*.{js,ts}": "eslint --cache --fix",
     "*.{js,ts,css,md}": "prettier --write"
   },
   "dependencies": {
-    "@fastify/autoload": "5.10.0",
     "@fastify/cors": "8.5.0",
     "@fastify/env": "4.4.0",
     "@fastify/etag": "4.2.0",
     "@fastify/helmet": "11.1.1",
     "@fastify/multipart": "7.7.3",
-    "@fastify/one-line-logger": "1.4.0",
     "@fastify/rate-limit": "8.1.1",
     "@fastify/sensible": "5.6.0",
     "@innei/next-async": "0.4.0",
@@ -32,15 +30,12 @@
     "@tanstack/query-core": "4.41.0",
     "axios": "1.13.6",
     "chalk": "4.1.2",
-    "close-with-grace": "1.3.0",
     "consola": "2.15.3",
     "cron": "2.4.4",
     "dayjs": "1.11.19",
     "dotenv": "16.6.1",
     "fastify": "4.29.1",
-    "fastify-cli": "5.9.0",
     "fastify-plugin": "4.5.1",
-    "fastify-tsconfig": "1.0.1",
     "git-webhook-handler": "link:packages/git-webhook-handler",
     "husky": "8.0.3",
     "lodash": "4.17.23",
@@ -49,7 +44,6 @@
     "remove-markdown": "0.6.3",
     "socket.io-client": "4.8.3",
     "telegraf": "4.16.3",
-    "tsconfig-paths": "4.2.0",
     "zod": "3.25.76"
   },
   "devDependencies": {
@@ -65,28 +59,15 @@
     "cross-env": "7.0.3",
     "eslint": "8.57.1",
     "fast-json-stringify": "5.16.1",
+    "fastify-tsconfig": "1.0.1",
     "lint-staged": "13.3.0",
     "prettier": "3.8.1",
-    "ts-node": "10.9.2",
+    "tsdown": "0.12.4",
     "tsx": "3.14.0",
     "typescript": "5.9.3"
   },
   "engines": {
-    "node": ">=16.20.0"
-  },
-  "tsup": {
-    "entry": [
-      "src/**/*.ts"
-    ],
-    "splitting": false,
-    "sourcemap": true,
-    "clean": true,
-    "format": [
-      "cjs",
-      "esm"
-    ],
-    "legacyOutput": true,
-    "target": "es2018"
+    "node": ">=22"
   },
   "packageManager": "pnpm@9.15.9"
 }

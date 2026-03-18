@@ -1,55 +1,45 @@
-/* eslint-disable import/default */
-import './lib/logger'
+import { registerLogger } from "./lib/logger";
 
-import { join } from 'path'
-import type { AutoloadPluginOptions } from '@fastify/autoload'
-import type { FastifyPluginAsync } from 'fastify'
-import type { ModuleContext } from './types/context'
+import type { FastifyPluginAsync } from "fastify";
+import type { ModuleContext } from "./types/context";
 
-import AutoLoad from '@fastify/autoload'
+import { initTgBot } from "./bot";
+import { hook } from "./lib/plugin";
+import { registerModules } from "./modules/loader";
 
-import { initTgBot } from './bot'
-import { registerLogger } from './lib/logger'
-import { hook } from './lib/plugin'
-import { registerModules } from './modules/loader'
+import corsPlugin from "./plugins/cors";
+import etagPlugin from "./plugins/etag";
+import helmetPlugin from "./plugins/helmet";
+import multipartPlugin from "./plugins/multipart";
+import ratelimitPlugin from "./plugins/ratelimit";
+import sensiblePlugin from "./plugins/sensible";
 
-export type AppOptions = {
-  // Place your custom options for app below here.
-} & Partial<AutoloadPluginOptions>
+import exampleRoutes from "./routes/example";
+import rootRoutes from "./routes/root";
 
-const app: FastifyPluginAsync<AppOptions> = async (
-  fastify,
-  opts,
-): Promise<void> => {
-  // Place here your custom code!
-
-  const tgBot = await initTgBot()
+const app: FastifyPluginAsync = async (fastify): Promise<void> => {
+  const tgBot = await initTgBot();
 
   const moduleContext: ModuleContext = {
     tgBot,
     server: fastify,
-  }
+  };
 
-  registerLogger()
-  await registerModules()
-  await hook.runAsyncWaterfall(moduleContext)
+  registerLogger();
+  registerModules();
+  await hook.runAsyncWaterfall(moduleContext);
 
-  // Do not touch the following lines
+  // Plugins
+  await fastify.register(corsPlugin);
+  await fastify.register(etagPlugin);
+  await fastify.register(helmetPlugin);
+  await fastify.register(multipartPlugin);
+  await fastify.register(ratelimitPlugin);
+  await fastify.register(sensiblePlugin);
 
-  // This loads all plugins defined in plugins
-  // those should be support plugins that are reused
-  // through your application
-  void fastify.register(AutoLoad, {
-    dir: join(__dirname, 'plugins'),
-    options: opts,
-  })
+  // Routes
+  await fastify.register(rootRoutes);
+  await fastify.register(exampleRoutes, { prefix: "/example" });
+};
 
-  // This loads all plugins defined in routes
-  // define your routes in one of these
-  void fastify.register(AutoLoad, {
-    dir: join(__dirname, 'routes'),
-    options: opts,
-  })
-}
-
-export default app
+export default app;
