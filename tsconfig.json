@@ -7,6 +7,8 @@
   "extends": "fastify-tsconfig",
   "compilerOptions": {
     "outDir": "dist",
+    "moduleResolution": "bundler",
+    "module": "esnext",
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {

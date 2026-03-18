@@ -1,11 +1,11 @@
-import { appConfig } from "app.config";
+import { appConfig } from "~/app.config";
 import { CronJob } from "cron";
 import { sample } from "lodash";
 import RemoveMarkdown from "remove-markdown";
 import { z } from "zod";
 import type { PluginFunction } from "~/lib/plugin";
 import type { Telegraf } from "telegraf";
-import type { Message, Update } from "telegraf/typings/core/types/typegram";
+import type { Message, Update } from "telegraf/types";
 
 import { createHandler, type WebhookEventSource } from "@mx-space/webhook";
 

@@ -1,9 +1,9 @@
-import { appConfig } from "app.config";
+import { appConfig } from "~/app.config";
 import chalk from "chalk";
 import type { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 
 import { allControllers, createClient } from "@mx-space/api-client";
-import { axiosAdaptor } from "@mx-space/api-client/dist/adaptors/axios.cjs";
+import { axiosAdaptor } from "@mx-space/api-client/dist/adaptors/axios";
 
 import { userAgent } from "~/constants";
 import { createNamespaceLogger } from "~/lib/logger";
