@@ -1,31 +1,27 @@
-FROM jellydn/alpine-nodejs:20 as builder
-# Build the image
-RUN mkdir /app
+FROM node:22-alpine AS builder
 WORKDIR /app
 
 RUN apk upgrade --no-cache -U && \
   apk add --no-cache git
 
-COPY package.json pnpm-lock.yaml tsconfig.json ./
+RUN npm i -g pnpm
+
+COPY package.json pnpm-lock.yaml tsconfig.json tsdown.config.ts ./
 COPY src src
 COPY packages packages
 COPY app.config.ts app.config.ts
 
-RUN npm i -g pnpm
 RUN pnpm install --frozen-lockfile --prefer-frozen-lockfile
-ENV NODE_ENV=production
 RUN npm run build
 
-# Copy the build output
-FROM jellydn/alpine-nodejs:20
+FROM node:22-alpine
 WORKDIR /app
-COPY --from=builder /app .
 
-RUN npm i -g pnpm
 ENV NODE_ENV=production
 ENV TZ=Asia/Shanghai
-RUN pnpm install --frozen-lockfile --prefer-frozen-lockfile
-# Export 8888 for health check with fly.io
+
+COPY --from=builder /app/dist dist
+
 EXPOSE 8888
 EXPOSE 8080
-CMD ["yarn", "start:prod"]
+CMD ["node", "dist/server.js"]
