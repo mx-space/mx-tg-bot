@@ -1,6 +1,5 @@
 import type { PluginFunction } from '~/lib/plugin'
 
-import { escapeMarkdown } from '~/lib/helper'
 import { setTGBotCommands } from '~/lib/register-command'
 
 import { fetchHitokoto } from '../mx-space/api/hitokoto'
@@ -13,9 +12,10 @@ export const register: PluginFunction = async (ctx) => {
       group: '其他小功能',
       command: 'hitokoto',
       description: '获取一条一言',
-      handler: async () => {
+      handler: async (_, ctx) => {
         const { hitokoto } = await fetchHitokoto()
-        return escapeMarkdown(hitokoto)
+        await ctx.reply(hitokoto)
+        return true
       },
     },
   ])
