@@ -1,16 +1,13 @@
-import { appConfig } from "~/app.config";
-import { CronJob } from "cron";
-import { sample } from "lodash";
 import RemoveMarkdown from "remove-markdown";
-import { z } from "zod";
-import type { PluginFunction } from "~/lib/plugin";
 import type { Telegraf } from "telegraf";
 import type { Message, Update } from "telegraf/types";
+import { z } from "zod";
+import { appConfig } from "~/app.config";
+import type { PluginFunction } from "~/lib/plugin";
 
 import { createHandler, type WebhookEventSource } from "@mx-space/webhook";
 
 import { escapeMarkdown } from "~/lib/helper";
-import { createNamespaceLogger } from "~/lib/logger";
 import { setTGBotCommands } from "~/lib/register-command";
 import { relativeTimeFromNow } from "~/lib/time";
 
@@ -47,11 +44,7 @@ export const register: PluginFunction = async (ctx) => {
   });
 
   // socket.connect()
-  await Promise.all([
-    bindEvents(tgBot),
-    bindCommands(tgBot),
-    bindCronJob(tgBot),
-  ]);
+  await Promise.all([bindEvents(tgBot), bindCommands(tgBot)]);
 };
 
 async function bindEvents(tgBot: Telegraf) {
@@ -235,26 +228,4 @@ async function bindCommands(tgBot: Telegraf) {
       },
     },
   ]);
-}
-
-async function bindCronJob(tgBot: Telegraf) {
-  const logger = createNamespaceLogger("Mix Space CronJob");
-  const helloCron = new CronJob(
-    "0 0 8 * * *",
-    async () => {
-      const aggregateData = await getMxSpaceAggregateData();
-      const hitokoto =
-        sample((await fetchHitokoto()).from_who.split("")) || "喵";
-      logger.info("Daily greeting start sending");
-      await tgBot.telegram.sendMessage(
-        appConfig.mxSpace.watchChannelId,
-        `早安！这里是 ${aggregateData.user.name} 的博客，今天也是元气满满的一天！\n\n${hitokoto}`,
-      );
-    },
-    null,
-    false,
-    "Asia/Shanghai",
-  );
-
-  helloCron.start();
 }
