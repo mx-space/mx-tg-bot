@@ -23,7 +23,7 @@ axiosAdaptor.default.interceptors.request.use(
     req.headers = {
       ...req.headers,
       "user-agent": userAgent,
-      authorization: appConfig.mxSpace.token,
+      "x-api-key": appConfig.mxSpace.token,
       "x-request-id": Math.random().toString(36).slice(2),
     } as any;
 
