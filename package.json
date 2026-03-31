@@ -34,7 +34,7 @@
     "cron": "2.4.4",
     "dayjs": "1.11.19",
     "dotenv": "16.6.1",
-    "fastify": "4.29.1",
+    "fastify": "5.8.3",
     "fastify-plugin": "4.5.1",
     "git-webhook-handler": "link:packages/git-webhook-handler",
     "husky": "8.0.3",
