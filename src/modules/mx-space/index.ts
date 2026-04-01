@@ -79,8 +79,9 @@ async function bindEvents(tgBot: Telegraf) {
     if (!toCommentId) return;
 
     await apiClient.comment
-      .readerReply(toCommentId, {
-        text,
+      .proxy("owner-reply")(toCommentId)
+      .post({
+        data: { text },
       })
       .then(() => {
         ctx.reply("回复成功！");
