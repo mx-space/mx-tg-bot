@@ -16,6 +16,11 @@ import { fetchHitokoto } from "./api/hitokoto";
 import { getCommentReplyTarget } from "./comment-reply-target";
 import { getMxSpaceAggregateData } from "./data";
 import { handleEvent } from "./event-handler";
+import {
+  registerLinkAuditActions,
+  rejectLinkWithReason,
+} from "./link-audit-actions";
+import { consumeLinkAuditTarget } from "./link-audit-target";
 import { urlBuilder } from "./utils";
 
 export const register: PluginFunction = async (ctx) => {
@@ -48,6 +53,8 @@ export const register: PluginFunction = async (ctx) => {
 };
 
 async function bindEvents(tgBot: Telegraf) {
+  registerLinkAuditActions(tgBot);
+
   tgBot.on("new_chat_members", async (ctx) => {
     const { hitokoto } = await fetchHitokoto();
     const identifier = ctx.from.username
@@ -74,6 +81,23 @@ async function bindEvents(tgBot: Telegraf) {
 
     const replyToMessageId = message.reply_to_message?.message_id;
     if (!replyToMessageId) return;
+
+    const linkAudit = consumeLinkAuditTarget(chatId, replyToMessageId);
+    if (linkAudit) {
+      await rejectLinkWithReason(tgBot, linkAudit.linkId, text, {
+        chatId: linkAudit.originalChatId,
+        messageId: linkAudit.originalMessageId,
+        isPhoto: linkAudit.originalIsPhoto,
+        caption: linkAudit.originalCaption,
+      })
+        .then(() => {
+          ctx.reply("已拒绝并告知申请人。");
+        })
+        .catch((err) => {
+          ctx.reply(`拒绝失败！${err.message}`);
+        });
+      return;
+    }
 
     const toCommentId = getCommentReplyTarget(chatId, replyToMessageId);
     if (!toCommentId) return;
