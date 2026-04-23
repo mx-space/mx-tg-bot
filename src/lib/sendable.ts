@@ -10,6 +10,7 @@ interface MediaMessage {
   url: string[];
 
   caption?: string;
+  parseMode?: "Markdown" | "HTML" | "MarkdownV2";
 }
 export interface URLKeyboardMessage {
   type: "url";
@@ -77,15 +78,17 @@ export const createSendMessageInstance =
           continue;
 
         case "photo": {
-          const { url, caption = "" } = msg;
+          const { url, caption = "", parseMode } = msg;
           tasks.push(
             tgBot.telegram.sendMediaGroup(
               chatId,
               url.map((u, i) => {
+                const isFirst = i === 0;
                 return {
                   type: "photo",
                   media: u,
-                  caption: i === 0 ? caption : undefined,
+                  caption: isFirst ? caption : undefined,
+                  parse_mode: isFirst ? parseMode : undefined,
                 };
               }),
             ),

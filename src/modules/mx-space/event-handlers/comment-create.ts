@@ -6,8 +6,8 @@ import {
   type PostModel,
 } from "@mx-space/api-client";
 import type { BusinessEvents } from "@mx-space/webhook";
-import RemoveMarkdown from "remove-markdown";
 import { Markup } from "telegraf";
+import { md, richify } from "~/lib/rich-text";
 import type { Sendable } from "~/lib/sendable";
 
 import { relativeTimeFromNow } from "~/lib/time";
@@ -63,21 +63,21 @@ const buildCommentMessage = (
   const { author, text } = payload;
   const parent = "parent" in payload ? payload.parent : undefined;
   const isMaster = author === ownerName || author === ownerUsername;
+  const title = refModel.title;
 
   if (isMaster && !parent) {
-    return `${author} 在「${refModel.title}」发表之后的 ${relativeTimeFromNow(
-      refModel.created,
-    )}又说：${text}`;
+    const ago = relativeTimeFromNow(refModel.created);
+    return richify`${author} 在「${title}」发表之后的 ${ago}又说：${md(text)}`;
   }
 
-  return `${author} 在「${refModel.title}」发表了评论：${text}`;
+  return richify`${author} 在「${title}」发表了评论：${md(text)}`;
 };
 
-const buildCommentSendable = (message: string, url?: string): Sendable => {
+const buildCommentSendable = (html: string, url?: string): Sendable => {
   const sendable: Sendable = [
     {
-      type: "text",
-      content: RemoveMarkdown(message),
+      type: "HTML",
+      content: html,
     },
   ];
 
@@ -99,9 +99,12 @@ const sendCommentToOwner = async (
   const sentMessage = await runtime.ctx.tgBot.telegram.sendMessage(
     appConfig.ownerId,
     delivery.message,
-    delivery.url
-      ? Markup.inlineKeyboard([Markup.button.url("查看", delivery.url)])
-      : undefined,
+    {
+      parse_mode: "HTML",
+      ...(delivery.url
+        ? Markup.inlineKeyboard([Markup.button.url("查看", delivery.url)])
+        : {}),
+    },
   );
 
   trackCommentReplyTarget(

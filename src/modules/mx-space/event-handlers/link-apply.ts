@@ -2,6 +2,7 @@ import { LinkState } from "@mx-space/api-client";
 import type { BusinessEvents } from "@mx-space/webhook";
 import { Markup } from "telegraf";
 import { appConfig } from "~/app.config";
+import { md, richify, richifyCaption } from "~/lib/rich-text";
 import type { Sendable } from "~/lib/sendable";
 
 import type { MxEventHandler } from "./types";
@@ -14,7 +15,15 @@ export const handleLinkApply: MxEventHandler<
     return;
   }
 
-  const message = `有新的友链申请了耶！\n${name}\n${url}\n\n${description}`;
+  const message = avatar
+    ? richifyCaption`有新的友链申请了耶！\n${name}\n${url}\n\n${md(
+        description,
+        {
+          max: 800,
+        },
+      )}`
+    : richify`有新的友链申请了耶！\n${name}\n${url}\n\n${md(description)}`;
+
   const sendable: Sendable = [];
 
   if (avatar) {
@@ -22,10 +31,11 @@ export const handleLinkApply: MxEventHandler<
       type: "photo",
       url: [avatar],
       caption: message,
+      parseMode: "HTML",
     });
   } else {
     sendable.push({
-      type: "text",
+      type: "HTML",
       content: message,
     });
   }
@@ -47,9 +57,13 @@ export const handleLinkApply: MxEventHandler<
   if (avatar) {
     await telegram.sendPhoto(appConfig.ownerId, avatar, {
       caption: message,
+      parse_mode: "HTML",
       ...keyboard,
     });
   } else {
-    await telegram.sendMessage(appConfig.ownerId, message, keyboard);
+    await telegram.sendMessage(appConfig.ownerId, message, {
+      parse_mode: "HTML",
+      ...keyboard,
+    });
   }
 };
