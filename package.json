@@ -38,7 +38,7 @@
     "fastify-plugin": "4.5.1",
     "git-webhook-handler": "link:packages/git-webhook-handler",
     "husky": "8.0.3",
-    "lodash": "4.17.23",
+    "lodash": "4.18.1",
     "marked": "5.1.2",
     "randomcolor": "0.6.2",
     "remove-markdown": "0.6.3",
