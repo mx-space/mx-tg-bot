@@ -6,7 +6,7 @@ RUN apk upgrade --no-cache -U && \
 
 RUN npm i -g pnpm
 
-COPY package.json pnpm-lock.yaml tsconfig.json tsdown.config.ts ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json tsdown.config.ts ./
 COPY src src
 COPY packages packages
 COPY app.config.ts app.config.ts
