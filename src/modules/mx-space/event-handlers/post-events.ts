@@ -45,7 +45,7 @@ export const handlePostCreate: MxEventHandler<
 export const handlePostUpdate: MxEventHandler<
   BusinessEvents.POST_UPDATE
 > = async (runtime, payload) => {
-  const createdDate = dayjs(payload.created);
+  const createdDate = dayjs(payload.createdAt);
   const diff = dayjs().diff(createdDate, "day");
   if (diff < 90) {
     return;

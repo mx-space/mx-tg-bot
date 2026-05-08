@@ -1,10 +1,3 @@
-import type {
-  CategoryModel,
-  NoteModel,
-  PageModel,
-  PostModel,
-} from "@mx-space/api-client";
-
 import { getMxSpaceAggregateData } from "./data";
 
 export async function urlBuilder(path = "") {
@@ -14,35 +7,44 @@ export async function urlBuilder(path = "") {
   return new URL(path, aggregate?.url.webUrl);
 }
 
-function isPostModel(model: any): model is PostModel {
+interface UrlBuildableModel {
+  title?: string;
+  slug?: string | null;
+  nid?: number;
+  order?: number;
+  category?: { slug?: string } | string | null;
+}
+
+function isPostShape(model: UrlBuildableModel) {
   return (
     isDefined(model.title) && isDefined(model.slug) && !isDefined(model.order)
   );
 }
 
-function isPageModel(model: any): model is PageModel {
+function isPageShape(model: UrlBuildableModel) {
   return (
     isDefined(model.title) && isDefined(model.slug) && isDefined(model.order)
   );
 }
 
-function isNoteModel(model: any): model is NoteModel {
+function isNoteShape(model: UrlBuildableModel) {
   return isDefined(model.title) && isDefined(model.nid);
 }
 
-function buildUrl(model: PostModel | NoteModel | PageModel) {
-  if (isNoteModel(model)) {
+function buildUrl(model: UrlBuildableModel) {
+  if (isNoteShape(model)) {
     return `/notes/${model.nid}`;
-  } else if (isPostModel(model)) {
-    // TODO
-    if (!model.category) {
+  } else if (isPostShape(model)) {
+    const categorySlug =
+      typeof model.category === "object"
+        ? model.category?.slug
+        : model.category;
+    if (!categorySlug || !model.slug) {
       console.error("PostModel.category is missing!!!!!");
       return "#";
     }
-    return `/posts/${
-      (model.category as CategoryModel).slug
-    }/${encodeURIComponent(model.slug)}`;
-  } else if (isPageModel(model)) {
+    return `/posts/${categorySlug}/${encodeURIComponent(model.slug)}`;
+  } else if (isPageShape(model)) {
     return `/${model.slug}`;
   }
 

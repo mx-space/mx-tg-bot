@@ -1,12 +1,4 @@
 import type {
-  LinkModel,
-  NoteModel,
-  PostModel,
-  RecentlyModel,
-  SayModel,
-} from "@mx-space/api-client";
-import type {
-  IActivityLike,
   BusinessEvents,
   EventPayloadMapping,
   WebhookEventSource,
@@ -31,14 +23,15 @@ export interface MxEventRuntime {
 }
 
 export type MxEventPayloadMap = {
-  [BusinessEvents.POST_CREATE]: PostModel;
-  [BusinessEvents.POST_UPDATE]: PostModel;
-  [BusinessEvents.NOTE_CREATE]: NoteModel;
-  [BusinessEvents.LINK_APPLY]: LinkModel;
-  [BusinessEvents.COMMENT_CREATE]: CommentEventPayload;
-  [BusinessEvents.SAY_CREATE]: SayModel;
-  [BusinessEvents.RECENTLY_CREATE]: RecentlyModel;
-  [BusinessEvents.ACTIVITY_LIKE]: IActivityLike;
+  [K in
+    | BusinessEvents.POST_CREATE
+    | BusinessEvents.POST_UPDATE
+    | BusinessEvents.NOTE_CREATE
+    | BusinessEvents.LINK_APPLY
+    | BusinessEvents.COMMENT_CREATE
+    | BusinessEvents.SAY_CREATE
+    | BusinessEvents.RECENTLY_CREATE
+    | BusinessEvents.ACTIVITY_LIKE]: EventPayloadMapping[K];
 };
 
 export type HandledMxEvent = keyof MxEventPayloadMap;

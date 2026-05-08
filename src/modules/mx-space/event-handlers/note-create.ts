@@ -23,10 +23,10 @@ export const handleNoteCreate: MxEventHandler<
   BusinessEvents.NOTE_CREATE
 > = async (runtime, payload) => {
   const owner = (await runtime.getAggregateData()).user;
-  const { title, text, mood, weather, images, password } = payload;
+  const { title, text, mood, weather, images, hasPassword } = payload;
   const isSecret = checkNoteIsSecret(payload.publicAt);
 
-  if (password || isSecret) {
+  if (hasPassword || isSecret) {
     return;
   }
 
@@ -44,7 +44,9 @@ export const handleNoteCreate: MxEventHandler<
     await runtime.sendToGroup([
       {
         type: "photo",
-        url: images.map((image) => image.src),
+        url: (images as { src?: string }[])
+          .map((image) => image.src)
+          .filter((src): src is string => Boolean(src)),
         caption: message,
       },
     ]);

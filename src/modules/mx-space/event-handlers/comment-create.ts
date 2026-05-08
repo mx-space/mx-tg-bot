@@ -1,11 +1,6 @@
 import { appConfig } from "~/app.config";
-import {
-  CollectionRefTypes,
-  type NoteModel,
-  type PageModel,
-  type PostModel,
-} from "@mx-space/api-client";
-import type { BusinessEvents } from "@mx-space/webhook";
+import type { NoteModel, PageModel, PostModel } from "@mx-space/api-client";
+import { CollectionRefTypes, type BusinessEvents } from "@mx-space/webhook";
 import { Markup } from "telegraf";
 import { md, richify } from "~/lib/rich-text";
 import type { Sendable } from "~/lib/sendable";
@@ -31,22 +26,19 @@ interface CommentDeliveryContext {
   url?: string;
 }
 
-const getCommentRefId = (payload: CommentEventPayload) => {
-  const ref = payload.ref as any;
-
-  return ref?.id || ref?._id || ref;
-};
+const getCommentRefId = (payload: CommentEventPayload) => payload.refId;
 
 const resolveCommentRef = async (
   payload: CommentEventPayload,
 ): Promise<CommentRefModel | null> => {
   const refId = getCommentRefId(payload);
+  if (!refId) return null;
 
   switch (payload.refType) {
     case CollectionRefTypes.Post:
       return apiClient.post.getPost(refId);
     case CollectionRefTypes.Note:
-      return apiClient.note.getNoteById(refId as string);
+      return apiClient.note.getNoteById(refId);
     case CollectionRefTypes.Page:
       return apiClient.page.getById(refId);
     default:
