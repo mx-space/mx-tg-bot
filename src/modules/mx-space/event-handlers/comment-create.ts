@@ -53,12 +53,14 @@ const buildCommentMessage = (
   ownerUsername?: string,
 ) => {
   const { author, text } = payload;
-  const parent = "parent" in payload ? payload.parent : undefined;
+  const parentCommentId = payload.parentCommentId;
   const isMaster = author === ownerName || author === ownerUsername;
   const title = refModel.title;
 
-  if (isMaster && !parent) {
-    const ago = relativeTimeFromNow(refModel.created);
+  if (isMaster && !parentCommentId) {
+    const createdAt =
+      (refModel as { createdAt?: string }).createdAt ?? refModel.created;
+    const ago = relativeTimeFromNow(createdAt);
     return richify`${author} 在「${title}」发表之后的 ${ago}又说：${md(text)}`;
   }
 
