@@ -58,9 +58,7 @@ const buildCommentMessage = (
   const title = refModel.title;
 
   if (isMaster && !parentCommentId) {
-    const createdAt =
-      (refModel as { createdAt?: string }).createdAt ?? refModel.created;
-    const ago = relativeTimeFromNow(createdAt);
+    const ago = relativeTimeFromNow(refModel.createdAt);
     return richify`${author} 在「${title}」发表之后的 ${ago}又说：${md(text)}`;
   }
 

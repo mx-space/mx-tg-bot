@@ -199,7 +199,7 @@ async function bindCommands(tgBot: Telegraf) {
         const text = data.data
           .map(
             (note) =>
-              `${relativeTimeFromNow(note.created)}前\n[${escapeMarkdown(
+              `${relativeTimeFromNow(note.createdAt)}前\n[${escapeMarkdown(
                 note.title,
               )}](${webUrl}/notes/${note.nid})`,
           )
@@ -222,7 +222,7 @@ async function bindCommands(tgBot: Telegraf) {
         const text = data.data
           .map(
             (post) =>
-              `${relativeTimeFromNow(post.created)}前\n[${escapeMarkdown(
+              `${relativeTimeFromNow(post.createdAt)}前\n[${escapeMarkdown(
                 post.title,
               )}](${webUrl}/posts/${post.category.slug}/${post.slug})`,
           )
