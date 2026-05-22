@@ -2,8 +2,9 @@ import { appConfig } from "~/app.config";
 import chalk from "chalk";
 import type { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 
-import { allControllers, createClient } from "@mx-space/api-client";
+import { allControllers } from "@mx-space/api-client";
 import { axiosAdaptor } from "@mx-space/api-client/dist/adaptors/axios";
+import { createLegacyApiClient } from "@mx-space/api-client/legacy";
 
 import { userAgent } from "~/constants";
 import { createNamespaceLogger } from "~/lib/logger";
@@ -52,7 +53,7 @@ axiosAdaptor.default.interceptors.response.use(
     return error;
   },
 );
-export const apiClient = createClient(axiosAdaptor)(
+export const apiClient = createLegacyApiClient(axiosAdaptor)(
   appConfig.mxSpace?.apiEndpoint,
   {
     controllers: allControllers,

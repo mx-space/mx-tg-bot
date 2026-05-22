@@ -25,7 +25,7 @@
     "@fastify/rate-limit": "8.1.1",
     "@fastify/sensible": "5.6.0",
     "@innei/next-async": "0.4.0",
-    "@mx-space/api-client": "2.4.0",
+    "@mx-space/api-client": "5.0.2-next.10",
     "@mx-space/webhook": "0.8.3",
     "@tanstack/query-core": "4.41.0",
     "axios": "1.15.2",
