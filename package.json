@@ -28,7 +28,7 @@
     "@mx-space/api-client": "5.0.2-next.10",
     "@mx-space/webhook": "0.8.3",
     "@tanstack/query-core": "4.41.0",
-    "axios": "1.15.2",
+    "axios": "1.16.0",
     "chalk": "4.1.2",
     "consola": "2.15.3",
     "cron": "2.4.4",
