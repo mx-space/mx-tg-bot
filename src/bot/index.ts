@@ -17,6 +17,15 @@ async function initTgBot(): Promise<Telegraf> {
   tgBot = new Telegraf(bot.token);
   // extendTgBotEvent(tgBot)
 
+  // Without a catch handler, telegraf lets a throwing update handler kill the
+  // polling loop while the process stays alive: notifications keep sending but
+  // every inbound update (commands, callback buttons) silently piles up.
+  tgBot.catch((err, ctx) => {
+    logger.error(
+      `update ${ctx.update?.update_id} failed: ${(err as Error).message}`,
+    );
+  });
+
   tgBot.start((ctx) => {
     ctx.reply("Hi");
   });

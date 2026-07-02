@@ -56,7 +56,7 @@ export const registerLinkAuditActions = (tgBot: Telegraf) => {
 
     const linkId = ctx.match[1];
     try {
-      await (apiClient.link as any).proxy.audit(linkId).patch();
+      await apiClient.link.proxy.audit(linkId).patch();
       await ctx.answerCbQuery("已通过");
       await editMessageWithResult(ctx, "✅ 已通过");
     } catch (err) {
@@ -120,7 +120,7 @@ export const rejectLinkWithReason = async (
     caption: string;
   },
 ) => {
-  await (apiClient.link as any).proxy.audit.reason(linkId).post({
+  await apiClient.link.proxy.audit.reason(linkId).post({
     data: { reason, state: LinkState.Reject },
   });
 

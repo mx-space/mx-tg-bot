@@ -16,10 +16,7 @@ export const handleActivityLike: MxEventHandler<
 
   const refModelUrl = await apiClient.proxy
     .helper("url-builder")(id)
-    .get<{
-      data: string;
-    }>()
-    .then((res) => res.data);
+    .get<string>();
 
   await runtime.ctx.tgBot.telegram.sendMessage(
     appConfig.mxSpace.watchChannelId,
