@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:22.23.2-alpine AS builder
 WORKDIR /app
 
 RUN apk upgrade --no-cache -U && \
@@ -14,7 +14,7 @@ COPY app.config.ts app.config.ts
 RUN pnpm install --frozen-lockfile --prefer-frozen-lockfile
 RUN npm run build
 
-FROM node:22-alpine
+FROM node:22.23.2-alpine
 WORKDIR /app
 
 ENV NODE_ENV=production
