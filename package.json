@@ -56,7 +56,7 @@
     "@types/node-telegram-bot-api": "0.64.15",
     "@types/randomcolor": "0.5.9",
     "@types/remove-markdown": "0.3.4",
-    "cross-env": "7.0.3",
+    "cross-env": "10.1.0",
     "eslint": "8.57.1",
     "fast-json-stringify": "5.16.1",
     "fastify-tsconfig": "1.0.1",
