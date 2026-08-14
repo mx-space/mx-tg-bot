@@ -36,8 +36,11 @@ importers:
         specifier: 5.6.0
         version: 5.6.0
       '@mx-space/webhook':
-        specifier: 0.10.1
-        version: 0.10.1
+        specifier: file:/Users/innei/git/innei-repo/mx-core/.claude/worktrees/ws-migration/packages/webhook
+        version: file:../mx-core/.claude/worktrees/ws-migration/packages/webhook
+      '@mx-space/ws-client':
+        specifier: file:/Users/innei/git/innei-repo/mx-core/.claude/worktrees/ws-migration/packages/ws-client
+        version: file:../mx-core/.claude/worktrees/ws-migration/packages/ws-client
       '@tanstack/query-core':
         specifier: 4.44.0
         version: 4.44.0
@@ -83,9 +86,6 @@ importers:
       remove-markdown:
         specifier: 0.6.4
         version: 0.6.4
-      socket.io-client:
-        specifier: 4.8.3
-        version: 4.8.3(supports-color@7.2.0)
       telegraf:
         specifier: 4.16.3
         version: 4.16.3(supports-color@7.2.0)
@@ -525,9 +525,12 @@ packages:
     resolution: {integrity: sha512-e1/hzd6DiDhD1WeeOuX+EyP4d6uwZoIeArEY7FrX/JaBQUP75c9uYXCzF54YGZAYEaZaco2pOrQeLzSsIsJCjQ==}
     engines: {node: '>=22'}
 
-  '@mx-space/webhook@0.10.1':
-    resolution: {integrity: sha512-/GjWaplXnk+PDkvdDskr/84PMW95ix8hCwi5fzHDMhkbE61g6e86RlSzm0Aev8+LmKbSSBsdkDRjgIX7ULG9/w==}
+  '@mx-space/webhook@file:../mx-core/.claude/worktrees/ws-migration/packages/webhook':
+    resolution: {directory: ../mx-core/.claude/worktrees/ws-migration/packages/webhook, type: directory}
     engines: {node: '>=22'}
+
+  '@mx-space/ws-client@file:../mx-core/.claude/worktrees/ws-migration/packages/ws-client':
+    resolution: {directory: ../mx-core/.claude/worktrees/ws-migration/packages/ws-client, type: directory}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -642,9 +645,6 @@ packages:
 
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
-
-  '@socket.io/component-emitter@3.1.0':
-    resolution: {integrity: sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==}
 
   '@tanstack/query-core@4.44.0':
     resolution: {integrity: sha512-swSgb7OiPRR3UuIL7NuDrZNSMGmQD+wdtHxPD7j60SvBEnxbXurl5XOirtGEX2gm2hbK6mC8kMV1I+uO3l0UOw==}
@@ -1340,13 +1340,6 @@ packages:
 
   end-of-stream@1.4.4:
     resolution: {integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==}
-
-  engine.io-client@6.6.2:
-    resolution: {integrity: sha512-TAr+NKeoVTjEVW8P3iHguO1LO6RlUz9O5Y8o7EY0fU+gY1NYqas7NN3slpFtbXEsLMHk0h90fJMfKjRkQ0qUIw==}
-
-  engine.io-parser@5.2.1:
-    resolution: {integrity: sha512-9JktcM3u18nU9N2Lz3bWeBgxVgOKpw7yhRaoxQA3FUDZzzw+9WlA6p4G4u0RixNkg14fH7EfEc/RhpurtiROTQ==}
-    engines: {node: '>=10.0.0'}
 
   env-schema@6.0.0:
     resolution: {integrity: sha512-/IHp1EmrfubUOfF1wfe8koDWM5/dxUDylHANPNrPyrsYWJ7KRiB8gXbjtqQBujmOhpSpXXOhhnaL+meb+MaGtA==}
@@ -2559,14 +2552,6 @@ packages:
     resolution: {integrity: sha512-FC+lgizVPfie0kkhqUScwRu1O/lF6NOgJmlCgK+/LYxDCTk8sGelYaHDhFcDN+Sn3Cv+3VSa4Byeo+IMCzpMgQ==}
     engines: {node: '>=12'}
 
-  socket.io-client@4.8.3:
-    resolution: {integrity: sha512-uP0bpjWrjQmUt5DTHq9RuoCBdFJF10cdX9X+a368j/Ft0wmaVgxlrjvK3kjvgCODOMMOz9lcaRzxmso0bTWZ/g==}
-    engines: {node: '>=10.0.0'}
-
-  socket.io-parser@4.2.4:
-    resolution: {integrity: sha512-/GbIKmo8ioc+NIWIhwdecY0ge+qVBSMdgxGygevmdHj24bsfgtCmcUUcQ5ZzcylGFHsN3k4HB4Cgkl96KVnuew==}
-    engines: {node: '>=10.0.0'}
-
   sonic-boom@4.1.0:
     resolution: {integrity: sha512-NGipjjRicyJJ03rPiZCJYjwlsuP2d1/5QUviozRXC7S3WdVWNK5e3Ojieb9CCyfhq2UC+3+SRd9nG3I2lPRvUw==}
 
@@ -2872,22 +2857,6 @@ packages:
 
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
-
-  ws@8.17.1:
-    resolution: {integrity: sha512-6XQFvXTkbfUOZOKKILFG1PDK2NDQs4azKQl26T0YS5CxqWLgXajbPZ+h4gZekJyRqFU8pvnbAbbs/3TgRPy+GQ==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
-  xmlhttprequest-ssl@2.1.2:
-    resolution: {integrity: sha512-TEU+nJVUUnA4CYJFLvK5X9AOeH4KvDvhIfm0vV1GaQRtchnG0hgK5p8hw/xjv8cunWYCsiPCSDzObPyhEwq3KQ==}
-    engines: {node: '>=0.4.0'}
 
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
@@ -3359,9 +3328,11 @@ snapshots:
 
   '@mx-space/api-client@5.6.0': {}
 
-  '@mx-space/webhook@0.10.1':
+  '@mx-space/webhook@file:../mx-core/.claude/worktrees/ws-migration/packages/webhook':
     dependencies:
       rebuild: 0.1.2
+
+  '@mx-space/ws-client@file:../mx-core/.claude/worktrees/ws-migration/packages/ws-client': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -3426,8 +3397,6 @@ snapshots:
   '@rolldown/pluginutils@1.0.1': {}
 
   '@rtsao/scc@1.1.0': {}
-
-  '@socket.io/component-emitter@3.1.0': {}
 
   '@tanstack/query-core@4.44.0': {}
 
@@ -4080,20 +4049,6 @@ snapshots:
   end-of-stream@1.4.4:
     dependencies:
       once: 1.4.0
-
-  engine.io-client@6.6.2(supports-color@7.2.0):
-    dependencies:
-      '@socket.io/component-emitter': 3.1.0
-      debug: 4.3.4(supports-color@7.2.0)
-      engine.io-parser: 5.2.1
-      ws: 8.17.1
-      xmlhttprequest-ssl: 2.1.2
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-
-  engine.io-parser@5.2.1: {}
 
   env-schema@6.0.0:
     dependencies:
@@ -5397,24 +5352,6 @@ snapshots:
       ansi-styles: 6.2.1
       is-fullwidth-code-point: 4.0.0
 
-  socket.io-client@4.8.3(supports-color@7.2.0):
-    dependencies:
-      '@socket.io/component-emitter': 3.1.0
-      debug: 4.4.3(supports-color@7.2.0)
-      engine.io-client: 6.6.2(supports-color@7.2.0)
-      socket.io-parser: 4.2.4(supports-color@7.2.0)
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-
-  socket.io-parser@4.2.4(supports-color@7.2.0):
-    dependencies:
-      '@socket.io/component-emitter': 3.1.0
-      debug: 4.3.4(supports-color@7.2.0)
-    transitivePeerDependencies:
-      - supports-color
-
   sonic-boom@4.1.0:
     dependencies:
       atomic-sleep: 1.0.0
@@ -5749,10 +5686,6 @@ snapshots:
       strip-ansi: 7.1.0
 
   wrappy@1.0.2: {}
-
-  ws@8.17.1: {}
-
-  xmlhttprequest-ssl@2.1.2: {}
 
   yallist@3.1.1: {}
 
