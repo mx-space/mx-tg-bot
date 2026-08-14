@@ -1,78 +1,54 @@
 import { appConfig } from "app.config";
-import { io } from "socket.io-client";
 import type { ModuleContext } from "~/types/context";
-import type { Socket } from "socket.io-client";
 
-import { simpleCamelcaseKeys } from "@mx-space/api-client";
+import { BusinessEvents } from "@mx-space/webhook";
+import type { WsClient, WsClientState } from "@mx-space/ws-client";
+import { createWsClient } from "@mx-space/ws-client";
 
 import { createNamespaceLogger } from "~/lib/logger";
 
 import { handleEvent } from "./event-handler";
-import type { WebhookEventSource } from "@mx-space/webhook";
 
 const logger = createNamespaceLogger("mx-socket");
 
-export function createMxSocket(ctx: ModuleContext): Socket<any, any> {
+function toWsOrigin(url: string): string {
+  if (url.startsWith("https://"))
+    return `wss://${url.slice("https://".length)}`;
+  if (url.startsWith("http://")) return `ws://${url.slice("http://".length)}`;
+  return url;
+}
+
+export function createMxSocket(ctx: ModuleContext): WsClient {
   const dispatchEvent = handleEvent(ctx);
-  const mxSocket = io(appConfig.mxSpace.gateway, {
-    transports: ["websocket"],
-    timeout: 10000,
-    forceNew: true,
+  const client = createWsClient({
+    url: `${toWsOrigin(appConfig.mxSpace.gateway)}/ws/admin`,
     query: {
       token: appConfig.mxSpace.token,
     },
-
-    autoConnect: false,
   });
 
-  mxSocket.io.on("error", () => {
-    logger.error("Socket 连接异常");
-  });
-  mxSocket.io.on("reconnect", () => {
-    logger.info("Socket 重连成功");
-  });
-  mxSocket.io.on("reconnect_attempt", () => {
-    logger.info("Socket 重连中");
-  });
-  mxSocket.io.on("reconnect_failed", () => {
-    logger.info("Socket 重连失败");
-  });
-
-  mxSocket.on("disconnect", () => {
-    const tryReconnect = () => {
-      if (mxSocket.connected === false) {
-        mxSocket.io.connect();
-      } else {
-        timer = clearInterval(timer);
+  client.on("$state", (state: WsClientState) => {
+    switch (state) {
+      case "open": {
+        logger.info("Socket 已连接");
+        break;
       }
-    };
-    let timer: any = setInterval(tryReconnect, 2000);
-  });
-
-  mxSocket.on("connect_error", () => {
-    setTimeout(() => {
-      mxSocket.connect();
-    }, 1000);
-  });
-
-  mxSocket.on(
-    "message",
-    (payload: string | Record<"type" | "data" | "code" | "source", any>) => {
-      const parseMessage = (raw: {
-        type: string;
-        data?: any;
-        source?: WebhookEventSource;
-      }) => {
-        const data = simpleCamelcaseKeys(raw.data ?? {});
-        const source = raw.source ?? "system";
-        return dispatchEvent(raw.type as any, data, source);
-      };
-      if (typeof payload !== "string") {
-        return parseMessage(payload);
+      case "reconnecting": {
+        logger.info("Socket 重连中");
+        break;
       }
-      return parseMessage(JSON.parse(payload));
-    },
-  );
+      case "closed": {
+        logger.info("Socket 已断开");
+        break;
+      }
+    }
+  });
 
-  return mxSocket;
+  for (const type of Object.values(BusinessEvents)) {
+    client.on(type, (payload) => {
+      dispatchEvent(type, payload, "system");
+    });
+  }
+
+  return client;
 }
