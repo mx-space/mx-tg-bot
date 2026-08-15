@@ -39,8 +39,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@mx-space/ws-client':
-        specifier: file:/Users/innei/git/innei-repo/mx-core/.claude/worktrees/ws-migration/packages/ws-client
-        version: file:../mx-core/.claude/worktrees/ws-migration/packages/ws-client
+        specifier: ^0.1.0
+        version: 0.1.0
       '@tanstack/query-core':
         specifier: 4.44.0
         version: 4.44.0
@@ -529,8 +529,8 @@ packages:
     resolution: {integrity: sha512-PnPS7qapGtuyhXTvuxbOSQJHSQ+PZ/YLGwVU/C9lbCi1U8C6s6Gvh1faiu0pE6qvV0L6S3CUWclHP22lXG5p1w==}
     engines: {node: '>=22'}
 
-  '@mx-space/ws-client@file:../mx-core/.claude/worktrees/ws-migration/packages/ws-client':
-    resolution: {directory: ../mx-core/.claude/worktrees/ws-migration/packages/ws-client, type: directory}
+  '@mx-space/ws-client@0.1.0':
+    resolution: {integrity: sha512-LPxt26kEAKxZxtTJTpe/0v0ovB1iyBxa8VNpg0dwNScqy4n1tNgmI7Ah2L8A1/FcLlX9++N2VZIl6qfaw/jctA==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -3332,7 +3332,7 @@ snapshots:
     dependencies:
       rebuild: 0.1.2
 
-  '@mx-space/ws-client@file:../mx-core/.claude/worktrees/ws-migration/packages/ws-client': {}
+  '@mx-space/ws-client@0.1.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
