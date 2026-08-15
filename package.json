@@ -26,7 +26,7 @@
     "@fastify/sensible": "5.6.0",
     "@innei/next-async": "0.4.0",
     "@mx-space/api-client": "5.6.0",
-    "@mx-space/webhook": "file:/Users/innei/git/innei-repo/mx-core/.claude/worktrees/ws-migration/packages/webhook",
+    "@mx-space/webhook": "^1.0.0",
     "@mx-space/ws-client": "file:/Users/innei/git/innei-repo/mx-core/.claude/worktrees/ws-migration/packages/ws-client",
     "@tanstack/query-core": "4.44.0",
     "axios": "1.19.0",
