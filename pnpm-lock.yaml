@@ -36,10 +36,10 @@ importers:
         specifier: 5.8.0
         version: 5.8.0
       '@mx-space/webhook':
-        specifier: ^1.0.0
+        specifier: 1.0.0
         version: 1.0.0
       '@mx-space/ws-client':
-        specifier: ^0.1.0
+        specifier: 0.1.0
         version: 0.1.0
       '@tanstack/query-core':
         specifier: 4.44.0
