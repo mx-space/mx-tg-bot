@@ -69,18 +69,21 @@ async function bindEvents(tgBot: Telegraf) {
     });
   });
 
-  tgBot.on("text", async (ctx) => {
+  // This handler is registered before the commands in bindCommands (which
+  // awaits setMyCommands first), so anything it does not consume must be
+  // passed on, or every command text update stops here.
+  tgBot.on("text", async (ctx, next) => {
     const chatId = ctx.chat?.id;
-    if (!chatId || chatId !== appConfig.ownerId) return;
+    if (!chatId || chatId !== appConfig.ownerId) return next();
 
     const message = ctx.message as Update.New &
       Update.NonChannel &
       Message.TextMessage;
     const text = message.text;
-    if (!text) return;
+    if (!text) return next();
 
     const replyToMessageId = message.reply_to_message?.message_id;
-    if (!replyToMessageId) return;
+    if (!replyToMessageId) return next();
 
     const linkAudit = consumeLinkAuditTarget(chatId, replyToMessageId);
     if (linkAudit) {
@@ -100,7 +103,7 @@ async function bindEvents(tgBot: Telegraf) {
     }
 
     const toCommentId = getCommentReplyTarget(chatId, replyToMessageId);
-    if (!toCommentId) return;
+    if (!toCommentId) return next();
 
     await apiClient.comment
       .proxy("owner-reply")(toCommentId)
