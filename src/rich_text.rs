@@ -48,7 +48,7 @@ pub fn utf16_len(input: &str) -> usize {
     input.encode_utf16().count()
 }
 
-fn take_utf16(input: &str, max: usize) -> &str {
+pub fn take_utf16(input: &str, max: usize) -> &str {
     let mut units = 0;
     for (idx, c) in input.char_indices() {
         units += c.len_utf16();
@@ -283,4 +283,8 @@ pub fn strip_markdown(markdown: &str) -> String {
         }
     }
     collapse_newlines(&out)
+}
+
+pub fn md(markdown: &str, max: usize) -> String {
+    md_to_tg_html(&truncate_with_ellipsis(markdown, max))
 }
