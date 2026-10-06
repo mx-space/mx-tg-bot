@@ -15,7 +15,10 @@ serde = { version = "1.0.229", features = ["derive"] }
 serde_json = { version = "1.0.151", features = ["preserve_order"] }
 sha1 = "0.11.0"
 sha2 = "0.11.0"
-teloxide = { version = "0.17.0", default-features = false, features = ["rustls", "macros", "ctrlc_handler"] }
+teloxide = { version = "0.17.0", default-features = false, features = ["rustls", "macros"] }
 tokio = { version = "1.53.2", features = ["macros", "rt-multi-thread", "signal", "time", "sync"] }
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+
+[dev-dependencies]
+tower = { version = "0.5.3", features = ["util"] }

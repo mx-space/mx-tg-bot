@@ -1,16 +1,16 @@
 use std::sync::Arc;
 
 use chrono::{DateTime, Utc};
-use serde::de::DeserializeOwned;
 use serde::Deserialize;
+use serde::de::DeserializeOwned;
 use serde_json::Value;
 
 use crate::app::AppState;
 use crate::config::{MX_WATCH_CHANNEL_ID, MX_WATCH_GROUP_IDS, OWNER_ID};
-use crate::mx::api::{build_url, Aggregate, Doc};
+use crate::mx::api::{Aggregate, Doc, build_url};
 use crate::rich_text::{
-    escape_html, md, md_to_tg_html, strip_markdown, take_utf16, truncate_with_ellipsis, utf16_len,
-    MD_DEFAULT_MAX, TG_CAPTION_MAX, TG_TEXT_MAX,
+    MD_DEFAULT_MAX, TG_CAPTION_MAX, TG_TEXT_MAX, escape_html, md, md_to_tg_html, strip_markdown,
+    take_utf16, truncate_with_ellipsis, utf16_len,
 };
 use crate::tg::{self, Button, Message};
 use crate::time::relative_time_from_now;
@@ -96,9 +96,14 @@ pub struct RecentlyPayload {
     pub enrichments: Option<serde_json::Map<String, Value>>,
 }
 
-fn enrichment_entries(map: &serde_json::Map<String, Value>) -> impl Iterator<Item = (&String, Enrichment)> {
-    map.iter()
-        .filter_map(|(k, v)| serde_json::from_value::<Enrichment>(v.clone()).ok().map(|e| (k, e)))
+fn enrichment_entries(
+    map: &serde_json::Map<String, Value>,
+) -> impl Iterator<Item = (&String, Enrichment)> {
+    map.iter().filter_map(|(k, v)| {
+        serde_json::from_value::<Enrichment>(v.clone())
+            .ok()
+            .map(|e| (k, e))
+    })
 }
 
 #[derive(Debug, Deserialize)]
@@ -141,7 +146,9 @@ fn post_message(owner: &str, verb: &str, post: &Doc, web_url: &str) -> Option<Me
         .filter(|s| !s.is_empty())
         .map(|s| format!("{s}\n\n"))
         .unwrap_or_default();
-    Some(Message::text(format!("{owner} {verb}: {title}\n\n{summary}\n前往阅读：{url}")))
+    Some(Message::text(format!(
+        "{owner} {verb}: {title}\n\n{summary}\n前往阅读：{url}"
+    )))
 }
 
 pub fn post_create(owner: &str, post: &Doc, web_url: &str) -> Option<Message> {
@@ -156,7 +163,12 @@ pub fn post_update(owner: &str, post: &Doc, web_url: &str, now: DateTime<Utc>) -
     post_message(owner, "更新了文章", post, web_url)
 }
 
-pub fn note_create(owner: &str, note: &NotePayload, web_url: &str, now: DateTime<Utc>) -> Option<Message> {
+pub fn note_create(
+    owner: &str,
+    note: &NotePayload,
+    web_url: &str,
+    now: DateTime<Utc>,
+) -> Option<Message> {
     if note.has_password || note.public_at.is_some_and(|at| at > now) {
         return None;
     }
@@ -167,17 +179,28 @@ pub fn note_create(owner: &str, note: &NotePayload, web_url: &str, now: DateTime
         raw
     };
     let status = [
-        note.mood.as_deref().filter(|m| !m.is_empty()).map(|m| format!("心情: {m}")),
-        note.weather.as_deref().filter(|w| !w.is_empty()).map(|w| format!("天气: {w}")),
+        note.mood
+            .as_deref()
+            .filter(|m| !m.is_empty())
+            .map(|m| format!("心情: {m}")),
+        note.weather
+            .as_deref()
+            .filter(|w| !w.is_empty())
+            .map(|w| format!("天气: {w}")),
     ]
     .into_iter()
     .flatten()
     .collect::<Vec<_>>()
     .join("\t");
-    let status = if status.is_empty() { "\n".to_string() } else { format!("\n{status}\n\n") };
+    let status = if status.is_empty() {
+        "\n".to_string()
+    } else {
+        format!("\n{status}\n\n")
+    };
     let title = note.doc.title.as_deref().unwrap_or_default();
     let url = build_url(web_url, &note.doc).unwrap_or_default();
-    let message = format!("{owner} 发布了新生活观察日记: {title}\n{status}{preview}\n\n前往阅读：{url}");
+    let message =
+        format!("{owner} 发布了新生活观察日记: {title}\n{status}{preview}\n\n前往阅读：{url}");
 
     let images: Vec<String> = note
         .images
@@ -188,7 +211,11 @@ pub fn note_create(owner: &str, note: &NotePayload, web_url: &str, now: DateTime
     if images.is_empty() {
         return Some(Message::text(message));
     }
-    Some(Message::photos(images, truncate_with_ellipsis(&message, TG_CAPTION_MAX), false))
+    Some(Message::photos(
+        images,
+        truncate_with_ellipsis(&message, TG_CAPTION_MAX),
+        false,
+    ))
 }
 
 pub fn link_apply(link: &LinkPayload) -> Option<LinkApplyOut> {
@@ -196,11 +223,19 @@ pub fn link_apply(link: &LinkPayload) -> Option<LinkApplyOut> {
         return None;
     }
     let description = link.description.as_deref().unwrap_or_default();
-    let head = format!("有新的友链申请了耶！\n{}\n{}\n\n", escape_html(&link.name), escape_html(&link.url));
+    let head = format!(
+        "有新的友链申请了耶！\n{}\n{}\n\n",
+        escape_html(&link.name),
+        escape_html(&link.url)
+    );
     let base = match link.avatar.as_deref().filter(|a| !a.is_empty()) {
         Some(avatar) => {
             let caption = format!("{head}{}", md(description, 800));
-            Message::photos(vec![avatar.to_string()], truncate_with_ellipsis(&caption, TG_CAPTION_MAX), true)
+            Message::photos(
+                vec![avatar.to_string()],
+                truncate_with_ellipsis(&caption, TG_CAPTION_MAX),
+                true,
+            )
         }
         None => {
             let text = format!("{head}{}", md(description, MD_DEFAULT_MAX));
@@ -209,8 +244,14 @@ pub fn link_apply(link: &LinkPayload) -> Option<LinkApplyOut> {
     };
     let owner = link.id.as_ref().map(|id| {
         base.clone()
-            .button(Button::Callback("✅ 通过".into(), format!("link:pass:{id}")))
-            .button(Button::Callback("❌ 拒绝".into(), format!("link:reject:{id}")))
+            .button(Button::Callback(
+                "✅ 通过".into(),
+                format!("link:pass:{id}"),
+            ))
+            .button(Button::Callback(
+                "❌ 拒绝".into(),
+                format!("link:reject:{id}"),
+            ))
     });
     Some(LinkApplyOut { group: base, owner })
 }
@@ -243,7 +284,10 @@ pub fn comment_create(
     }
 
     match source {
-        Source::Admin => CommentOut { group: None, owner: Some(message) },
+        Source::Admin => CommentOut {
+            group: None,
+            owner: Some(message),
+        },
         _ if comment.is_whispers => CommentOut {
             group: Some(Message::text(format!(
                 "「{}」嘘，有人说了一句悄悄话。是什么呢",
@@ -251,7 +295,10 @@ pub fn comment_create(
             ))),
             owner: Some(message),
         },
-        _ => CommentOut { group: Some(message), owner: None },
+        _ => CommentOut {
+            group: Some(message),
+            owner: None,
+        },
     }
 }
 
@@ -293,10 +340,21 @@ pub fn recently_create(owner: &str, recently: &RecentlyPayload) -> Message {
     let Some((_, url, title, (verb, open, close))) = picked else {
         return Message::text(format!("{owner} 发布一条动态说：\n{content}"));
     };
-    let link = format!("<a href=\"{}\">{}</a>", escape_html(&url), escape_html(&title));
+    let link = format!(
+        "<a href=\"{}\">{}</a>",
+        escape_html(&url),
+        escape_html(&title)
+    );
     let rest = md_to_tg_html(content.replacen(&url, "", 1).trim());
-    let rest = if rest.is_empty() { rest } else { format!("\n\n{rest}") };
-    Message::html(format!("{} {verb}{open}{link}{close}{rest}", escape_html(owner)))
+    let rest = if rest.is_empty() {
+        rest
+    } else {
+        format!("\n\n{rest}")
+    };
+    Message::html(format!(
+        "{} {verb}{open}{link}{close}{rest}",
+        escape_html(owner)
+    ))
 }
 
 pub fn activity_like(like: &ActivityLikePayload, url: Option<String>) -> Message {
@@ -327,7 +385,9 @@ async fn resolve_ref(state: &AppState, comment: &CommentPayload) -> Option<Doc> 
         "page" => state.mx.page(id).await,
         _ => return None,
     };
-    result.map_err(|err| tracing::error!("comment ref {id}: {err}")).ok()
+    result
+        .map_err(|err| tracing::error!("comment ref {id}: {err}"))
+        .ok()
 }
 
 async fn aggregate(state: &AppState) -> Option<Aggregate> {
@@ -353,7 +413,8 @@ pub async fn dispatch(state: Arc<AppState>, event: String, payload: Value, sourc
     let now = Utc::now();
     match event.as_str() {
         "post.create" | "post.update" => {
-            let (Some(post), Some(agg)) = (decode::<Doc>(&event, payload), aggregate(&state).await) else {
+            let (Some(post), Some(agg)) = (decode::<Doc>(&event, payload), aggregate(&state).await)
+            else {
                 return;
             };
             let msg = if event == "post.create" {
@@ -363,12 +424,17 @@ pub async fn dispatch(state: Arc<AppState>, event: String, payload: Value, sourc
             };
             match msg {
                 Some(msg) => tg::send_all(&state.bot, groups, &msg).await,
-                None if post.category.is_none() => tracing::error!("category not found, post id: {}", post.id),
+                None if post.category.is_none() => {
+                    tracing::error!("category not found, post id: {}", post.id)
+                }
                 None => {}
             }
         }
         "note.create" => {
-            let (Some(note), Some(agg)) = (decode::<NotePayload>(&event, payload), aggregate(&state).await) else {
+            let (Some(note), Some(agg)) = (
+                decode::<NotePayload>(&event, payload),
+                aggregate(&state).await,
+            ) else {
                 return;
             };
             if let Some(msg) = note_create(&agg.user.name, &note, &agg.url.web_url, now) {
@@ -376,7 +442,9 @@ pub async fn dispatch(state: Arc<AppState>, event: String, payload: Value, sourc
             }
         }
         "link.apply" => {
-            let Some(link) = decode::<LinkPayload>(&event, payload) else { return };
+            let Some(link) = decode::<LinkPayload>(&event, payload) else {
+                return;
+            };
             let Some(out) = link_apply(&link) else { return };
             tg::send_all(&state.bot, groups, &out.group).await;
             match out.owner {
@@ -387,8 +455,12 @@ pub async fn dispatch(state: Arc<AppState>, event: String, payload: Value, sourc
             }
         }
         "comment.create" => {
-            let Some(comment) = decode::<CommentPayload>(&event, payload) else { return };
-            let Some(agg) = aggregate(&state).await else { return };
+            let Some(comment) = decode::<CommentPayload>(&event, payload) else {
+                return;
+            };
+            let Some(agg) = aggregate(&state).await else {
+                return;
+            };
             let Some(ref_doc) = resolve_ref(&state, &comment).await else {
                 tracing::error!("comment: ref model not found, refId: {:?}", comment.ref_id);
                 return;
@@ -400,25 +472,38 @@ pub async fn dispatch(state: Arc<AppState>, event: String, payload: Value, sourc
             if let Some(owner) = out.owner
                 && let Some(message_id) = send_owner(&state, &owner).await
             {
-                state.comment_reply.insert((OWNER_ID, message_id), comment.id.clone());
+                state
+                    .comment_reply
+                    .insert((OWNER_ID, message_id), comment.id.clone());
             }
         }
         "say.create" => {
-            let (Some(say), Some(agg)) = (decode::<SayPayload>(&event, payload), aggregate(&state).await) else {
+            let (Some(say), Some(agg)) = (
+                decode::<SayPayload>(&event, payload),
+                aggregate(&state).await,
+            ) else {
                 return;
             };
             tg::send_all(&state.bot, groups, &say_create(&agg.user.name, &say)).await;
         }
         "recently.create" => {
-            let (Some(recently), Some(agg)) =
-                (decode::<RecentlyPayload>(&event, payload), aggregate(&state).await)
-            else {
+            let (Some(recently), Some(agg)) = (
+                decode::<RecentlyPayload>(&event, payload),
+                aggregate(&state).await,
+            ) else {
                 return;
             };
-            tg::send_all(&state.bot, groups, &recently_create(&agg.user.name, &recently)).await;
+            tg::send_all(
+                &state.bot,
+                groups,
+                &recently_create(&agg.user.name, &recently),
+            )
+            .await;
         }
         "activity.like" => {
-            let Some(like) = decode::<ActivityLikePayload>(&event, payload) else { return };
+            let Some(like) = decode::<ActivityLikePayload>(&event, payload) else {
+                return;
+            };
             let url = state
                 .mx
                 .url_builder(&like.reference.id)
@@ -426,7 +511,12 @@ pub async fn dispatch(state: Arc<AppState>, event: String, payload: Value, sourc
                 .map_err(|err| tracing::error!("url-builder: {err}"))
                 .ok()
                 .flatten();
-            tg::send_all(&state.bot, &[MX_WATCH_CHANNEL_ID], &activity_like(&like, url)).await;
+            tg::send_all(
+                &state.bot,
+                &[MX_WATCH_CHANNEL_ID],
+                &activity_like(&like, url),
+            )
+            .await;
         }
         _ => tracing::debug!("mx event {event} ignored"),
     }

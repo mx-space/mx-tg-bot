@@ -1,15 +1,20 @@
+use teloxide::RequestError;
 use teloxide::prelude::*;
 use teloxide::types::{
-    InlineKeyboardButton, InlineKeyboardMarkup, InputFile, InputMedia, InputMediaPhoto, MessageId, ParseMode,
+    InlineKeyboardButton, InlineKeyboardMarkup, InputFile, InputMedia, InputMediaPhoto, MessageId,
+    ParseMode,
 };
-use teloxide::RequestError;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Body {
     Text(String),
     Html(String),
     MarkdownV2(String),
-    Photos { urls: Vec<String>, caption: String, html: bool },
+    Photos {
+        urls: Vec<String>,
+        caption: String,
+        html: bool,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -26,15 +31,28 @@ pub struct Message {
 
 impl Message {
     pub fn text(content: impl Into<String>) -> Self {
-        Self { body: Body::Text(content.into()), buttons: Vec::new() }
+        Self {
+            body: Body::Text(content.into()),
+            buttons: Vec::new(),
+        }
     }
 
     pub fn html(content: impl Into<String>) -> Self {
-        Self { body: Body::Html(content.into()), buttons: Vec::new() }
+        Self {
+            body: Body::Html(content.into()),
+            buttons: Vec::new(),
+        }
     }
 
     pub fn photos(urls: Vec<String>, caption: impl Into<String>, html: bool) -> Self {
-        Self { body: Body::Photos { urls, caption: caption.into(), html }, buttons: Vec::new() }
+        Self {
+            body: Body::Photos {
+                urls,
+                caption: caption.into(),
+                html,
+            },
+            buttons: Vec::new(),
+        }
     }
 
     pub fn button(mut self, button: Button) -> Self {
@@ -47,8 +65,13 @@ fn keyboard(buttons: &[Button]) -> Option<InlineKeyboardMarkup> {
     let row: Vec<_> = buttons
         .iter()
         .filter_map(|b| match b {
-            Button::Url(label, url) => url.parse().ok().map(|u| InlineKeyboardButton::url(label.clone(), u)),
-            Button::Callback(label, data) => Some(InlineKeyboardButton::callback(label.clone(), data.clone())),
+            Button::Url(label, url) => url
+                .parse()
+                .ok()
+                .map(|u| InlineKeyboardButton::url(label.clone(), u)),
+            Button::Callback(label, data) => {
+                Some(InlineKeyboardButton::callback(label.clone(), data.clone()))
+            }
         })
         .collect();
     (!row.is_empty()).then(|| InlineKeyboardMarkup::new(vec![row]))
@@ -77,7 +100,11 @@ pub async fn send(bot: &Bot, chat_id: i64, msg: &Message) -> Result<MessageId, R
             }
             req.await?.id
         }
-        Body::Photos { urls, caption, html } if urls.len() == 1 || markup.is_some() => {
+        Body::Photos {
+            urls,
+            caption,
+            html,
+        } if urls.len() == 1 || markup.is_some() => {
             let mut req = bot.send_photo(chat, photo_input(&urls[0])).caption(caption);
             if *html {
                 req = req.parse_mode(ParseMode::Html);
@@ -87,7 +114,11 @@ pub async fn send(bot: &Bot, chat_id: i64, msg: &Message) -> Result<MessageId, R
             }
             req.await?.id
         }
-        Body::Photos { urls, caption, html } => {
+        Body::Photos {
+            urls,
+            caption,
+            html,
+        } => {
             let media = urls.iter().enumerate().map(|(i, url)| {
                 let mut photo = InputMediaPhoto::new(photo_input(url));
                 if i == 0 {

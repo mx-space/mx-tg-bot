@@ -30,7 +30,9 @@ impl Config {
         };
         let tg_bot_token = required("TG_BOT_TOKEN");
         let mx_token = required("MX_SPACE_TOKEN");
-        let mx_api_endpoint = required("MX_SPACE_API_ENDPOINT").trim_end_matches('/').to_string();
+        let mx_api_endpoint = required("MX_SPACE_API_ENDPOINT")
+            .trim_end_matches('/')
+            .to_string();
         let mx_webhook_secret = required("MX_SPACE_WEBHOOK_SECRET");
         let gh_webhook_secret = required("GH_WEBHOOK_SECRET");
         if !missing.is_empty() {

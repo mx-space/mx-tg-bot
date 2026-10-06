@@ -1073,6 +1073,7 @@ dependencies = [
  "sha2",
  "teloxide",
  "tokio",
+ "tower",
  "tracing",
  "tracing-subscriber",
 ]

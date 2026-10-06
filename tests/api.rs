@@ -1,10 +1,13 @@
 use std::collections::HashMap;
 
 use mx_tg_bot::config::Config;
-use mx_tg_bot::mx::api::{build_url, parse_envelope, Aggregate, Doc};
+use mx_tg_bot::mx::api::{Aggregate, Doc, build_url, parse_envelope};
 
 fn env(pairs: &[(&str, &str)]) -> HashMap<String, String> {
-    pairs.iter().map(|(k, v)| (k.to_string(), v.to_string())).collect()
+    pairs
+        .iter()
+        .map(|(k, v)| (k.to_string(), v.to_string()))
+        .collect()
 }
 
 const REQUIRED: [(&str, &str); 5] = [
@@ -28,7 +31,10 @@ fn config_defaults_match_ts_server() {
 fn config_reports_every_missing_var() {
     let vars = env(&REQUIRED[2..]);
     let err = Config::from_lookup(|k| vars.get(k).cloned()).unwrap_err();
-    assert!(err.contains("TG_BOT_TOKEN") && err.contains("MX_SPACE_TOKEN"), "{err}");
+    assert!(
+        err.contains("TG_BOT_TOKEN") && err.contains("MX_SPACE_TOKEN"),
+        "{err}"
+    );
 }
 
 #[test]
@@ -44,8 +50,11 @@ fn envelope_unwraps_data() {
 
 #[test]
 fn envelope_maps_error_body() {
-    let err = parse_envelope::<Doc>(404, br#"{"error":{"code":"POST_NOT_FOUND","message":"Post not found"}}"#)
-        .unwrap_err();
+    let err = parse_envelope::<Doc>(
+        404,
+        br#"{"error":{"code":"POST_NOT_FOUND","message":"Post not found"}}"#,
+    )
+    .unwrap_err();
     assert_eq!(err.code, "POST_NOT_FOUND");
     assert_eq!(err.message, "Post not found");
 }
@@ -64,11 +73,19 @@ fn doc(json: &str) -> Doc {
 #[test]
 fn build_url_handles_each_shape() {
     let web = "https://innei.in";
-    let note = doc(r#"{"id":"1","title":"n","nid":220,"slug":"s","createdAt":"2026-10-05T18:51:29.209Z"}"#);
-    assert_eq!(build_url(web, &note).as_deref(), Some("https://innei.in/notes/220"));
+    let note = doc(
+        r#"{"id":"1","title":"n","nid":220,"slug":"s","createdAt":"2026-10-05T18:51:29.209Z"}"#,
+    );
+    assert_eq!(
+        build_url(web, &note).as_deref(),
+        Some("https://innei.in/notes/220")
+    );
 
     let post = doc(r#"{"id":"1","title":"p","slug":"a b","category":{"slug":"tech"}}"#);
-    assert_eq!(build_url(web, &post).as_deref(), Some("https://innei.in/posts/tech/a%20b"));
+    assert_eq!(
+        build_url(web, &post).as_deref(),
+        Some("https://innei.in/posts/tech/a%20b")
+    );
 
     let post_string_category = doc(r#"{"id":"1","title":"p","slug":"x","category":"tech"}"#);
     assert_eq!(
@@ -80,7 +97,10 @@ fn build_url_handles_each_shape() {
     assert_eq!(build_url(web, &post_no_category), None);
 
     let page = doc(r#"{"id":"1","title":"About","slug":"about","order":1}"#);
-    assert_eq!(build_url(web, &page).as_deref(), Some("https://innei.in/about"));
+    assert_eq!(
+        build_url(web, &page).as_deref(),
+        Some("https://innei.in/about")
+    );
 }
 
 #[test]

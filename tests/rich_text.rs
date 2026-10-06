@@ -37,7 +37,10 @@ fn escape_markdown_v2_matches_ts_output() {
 
 #[test]
 fn escape_html_only_touches_amp_lt_gt() {
-    assert_eq!(escape_html("a & <b> \"q\" 'q'"), "a &amp; &lt;b&gt; \"q\" 'q'");
+    assert_eq!(
+        escape_html("a & <b> \"q\" 'q'"),
+        "a &amp; &lt;b&gt; \"q\" 'q'"
+    );
 }
 
 #[test]

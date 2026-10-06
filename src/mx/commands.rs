@@ -8,8 +8,8 @@ use teloxide::utils::command::BotCommands;
 
 use crate::app::AppState;
 use crate::config::OWNER_ID;
-use crate::mx::api::{build_url, CategoryRef, Doc, Stat};
-use crate::mx::link_audit::{self, reject_with_reason, HandlerResult};
+use crate::mx::api::{CategoryRef, Doc, Stat, build_url};
+use crate::mx::link_audit::{self, HandlerResult, reject_with_reason};
 use crate::rich_text::{escape_html, escape_markdown_v2, strip_markdown};
 use crate::time::relative_time_from_now;
 
@@ -65,14 +65,20 @@ pub fn detail_markup(doc: &Doc, url: &str) -> String {
         .take(3)
         .collect::<Vec<_>>()
         .join("\n\n");
-    format!("[{title}]({url})\n\n{body}\n\n[阅读全文]({})", escape_markdown_v2(url))
+    format!(
+        "[{title}]({url})\n\n{body}\n\n[阅读全文]({})",
+        escape_markdown_v2(url)
+    )
 }
 
 fn list_markup(docs: &[Doc], now: DateTime<Utc>, url: impl Fn(&Doc) -> String) -> String {
     let lines = docs
         .iter()
         .map(|d| {
-            let ago = d.created_at.map(|c| relative_time_from_now(c, now)).unwrap_or_default();
+            let ago = d
+                .created_at
+                .map(|c| relative_time_from_now(c, now))
+                .unwrap_or_default();
             let title = escape_markdown_v2(d.title.as_deref().unwrap_or_default());
             format!("{ago}前\n[{title}]({})", url(d))
         })
@@ -82,20 +88,35 @@ fn list_markup(docs: &[Doc], now: DateTime<Utc>, url: impl Fn(&Doc) -> String) -
 }
 
 pub fn note_list_markup(notes: &[Doc], web_url: &str, now: DateTime<Utc>) -> String {
-    list_markup(notes, now, |n| format!("{web_url}/notes/{}", n.nid.unwrap_or_default()))
+    list_markup(notes, now, |n| {
+        format!("{web_url}/notes/{}", n.nid.unwrap_or_default())
+    })
 }
 
 pub fn post_list_markup(posts: &[Doc], web_url: &str, now: DateTime<Utc>) -> String {
     list_markup(posts, now, |p| {
-        let category = p.category.as_ref().and_then(CategoryRef::slug).unwrap_or_default();
-        format!("{web_url}/posts/{category}/{}", p.slug.as_deref().unwrap_or_default())
+        let category = p
+            .category
+            .as_ref()
+            .and_then(CategoryRef::slug)
+            .unwrap_or_default();
+        format!(
+            "{web_url}/posts/{category}/{}",
+            p.slug.as_deref().unwrap_or_default()
+        )
     })
 }
 
 pub fn stat_text(stat: &Stat) -> String {
     format!(
         "MX Space 统计信息\n\n文章数：{}\n说说数：{}\n友链申请数：{}\n评论数：{}\n今日访问量：{}\n在线总数：{}\n调用次数：{}",
-        stat.posts, stat.notes, stat.link_apply, stat.comments, stat.today_ip_access_count, stat.online, stat.call_time
+        stat.posts,
+        stat.notes,
+        stat.link_apply,
+        stat.comments,
+        stat.today_ip_access_count,
+        stat.online,
+        stat.call_time
     )
 }
 
@@ -105,16 +126,26 @@ pub fn help_html(bot_name: &str) -> String {
         .map(|(cmd, desc)| format!("/{cmd} - {desc}"))
         .collect::<Vec<_>>()
         .join("\n");
-    format!("<b>{}の使用方法</b>\n\n<b>mx_space</b>\n{commands}", escape_html(bot_name))
+    format!(
+        "<b>{}の使用方法</b>\n\n<b>mx_space</b>\n{commands}",
+        escape_html(bot_name)
+    )
 }
 
 pub fn welcome_text(identifier: &str, hitokoto: Option<&str>) -> String {
-    escape_markdown_v2(&format!("欢迎新大佬 {identifier} \n\n{}", hitokoto.unwrap_or_default()))
+    escape_markdown_v2(&format!(
+        "欢迎新大佬 {identifier} \n\n{}",
+        hitokoto.unwrap_or_default()
+    ))
 }
 
 pub fn bot_commands() -> Vec<BotCommand> {
     std::iter::once(BotCommand::new("help", "Get help"))
-        .chain(MX_COMMANDS.iter().map(|(cmd, desc)| BotCommand::new(*cmd, *desc)))
+        .chain(
+            MX_COMMANDS
+                .iter()
+                .map(|(cmd, desc)| BotCommand::new(*cmd, *desc)),
+        )
         .collect()
 }
 
@@ -138,7 +169,9 @@ async fn command_reply(state: &AppState, cmd: Command) -> Result<Option<String>,
                 DetailKind::Note => mx.notes(offset, 1).await,
             }
             .map_err(to_string)?;
-            let Some(doc) = docs.first() else { return Ok(None) };
+            let Some(doc) = docs.first() else {
+                return Ok(None);
+            };
             let web_url = mx.aggregate().await.map_err(to_string)?.url.web_url;
             let url = build_url(&web_url, doc).unwrap_or(web_url);
             Some(detail_markup(doc, &url))
@@ -153,7 +186,9 @@ async fn command_reply(state: &AppState, cmd: Command) -> Result<Option<String>,
             let web_url = mx.aggregate().await.map_err(to_string)?.url.web_url;
             Some(post_list_markup(&posts, &web_url, now))
         }
-        Command::MxStat => Some(escape_markdown_v2(&stat_text(&mx.stat().await.map_err(to_string)?))),
+        Command::MxStat => Some(escape_markdown_v2(&stat_text(
+            &mx.stat().await.map_err(to_string)?,
+        ))),
     })
 }
 
@@ -170,7 +205,11 @@ async fn on_command(bot: Bot, msg: Message, cmd: Command, state: Arc<AppState>) 
         }
         cmd => match command_reply(&state, cmd).await {
             Ok(Some(text)) if !text.is_empty() => {
-                if let Err(err) = bot.send_message(msg.chat.id, &text).parse_mode(ParseMode::MarkdownV2).await {
+                if let Err(err) = bot
+                    .send_message(msg.chat.id, &text)
+                    .parse_mode(ParseMode::MarkdownV2)
+                    .await
+                {
                     tracing::warn!("failed to send message, content:\n{text}\n{err}");
                 }
             }
@@ -186,7 +225,9 @@ async fn on_command(bot: Bot, msg: Message, cmd: Command, state: Arc<AppState>) 
 }
 
 async fn on_new_members(bot: Bot, msg: Message, state: Arc<AppState>) -> HandlerResult {
-    let Some(from) = msg.from.as_ref() else { return Ok(()) };
+    let Some(from) = msg.from.as_ref() else {
+        return Ok(());
+    };
     let identifier = match &from.username {
         Some(username) => format!("@{username}"),
         None => format!("{}({})", from.first_name, from.id),
@@ -214,7 +255,9 @@ async fn on_owner_text(bot: Bot, msg: Message, state: Arc<AppState>) -> HandlerR
         return Ok(());
     }
 
-    let Some(comment_id) = state.comment_reply.get(key) else { return Ok(()) };
+    let Some(comment_id) = state.comment_reply.get(key) else {
+        return Ok(());
+    };
     let reply = match state.mx.owner_reply(&comment_id, text).await {
         Ok(()) => "回复成功！".to_string(),
         Err(err) => format!("回复失败！{err}"),

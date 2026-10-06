@@ -1,13 +1,13 @@
 use std::collections::HashSet;
 use std::sync::Arc;
 
+use axum::Json;
 use axum::body::Bytes;
 use axum::extract::State;
 use axum::http::{HeaderMap, StatusCode};
-use axum::Json;
-use serde::de::DeserializeOwned;
 use serde::Deserialize;
-use serde_json::{json, Value};
+use serde::de::DeserializeOwned;
+use serde_json::{Value, json};
 
 use crate::app::AppState;
 use crate::config::GH_WATCH_GROUP_IDS;
@@ -132,23 +132,43 @@ fn push(p: Push) -> Option<String> {
     }
     let repo = &p.repository.full_name;
     let to_main = p.git_ref == "refs/heads/main" || p.git_ref == "refs/heads/master";
-    let author = |c: &Commit| c.author.as_ref().map(|a| a.name.clone()).unwrap_or_default();
+    let author = |c: &Commit| {
+        c.author
+            .as_ref()
+            .map(|a| a.name.clone())
+            .unwrap_or_default()
+    };
 
     if let [commit] = p.commits.as_slice() {
         let author = author(commit);
-        let coauthor = if !author.is_empty() && &author != pusher { format!(" & {author}") } else { String::new() };
+        let coauthor = if !author.is_empty() && &author != pusher {
+            format!(" & {author}")
+        } else {
+            String::new()
+        };
         let branch = if to_main {
             String::new()
         } else {
             format!("的 {} 分支", p.git_ref.trim_start_matches("refs/heads/"))
         };
-        let link = if to_main { String::new() } else { format!("\n\n查看提交更改内容: {}", commit.url) };
-        return Some(format!("{pusher}{coauthor} 向 {repo} {branch}提交了一个更改\n\n{}{link}", commit.message));
+        let link = if to_main {
+            String::new()
+        } else {
+            format!("\n\n查看提交更改内容: {}", commit.url)
+        };
+        return Some(format!(
+            "{pusher}{coauthor} 向 {repo} {branch}提交了一个更改\n\n{}{link}",
+            commit.message
+        ));
     }
 
     let authors: Vec<String> = p.commits.iter().map(author).collect();
     let unique = authors.iter().collect::<HashSet<_>>().len() == 1;
-    let who = if unique { authors[0].clone() } else { format!("{} 等多人", authors[0]) };
+    let who = if unique {
+        authors[0].clone()
+    } else {
+        format!("{} 等多人", authors[0])
+    };
     let messages = p
         .commits
         .iter()
@@ -179,10 +199,17 @@ fn release(e: ReleaseEvent) -> Option<String> {
 
 fn check_run(e: CheckRunEvent) -> Option<String> {
     let run = e.check_run;
-    let on_main = matches!(run.check_suite.head_branch.as_deref(), Some("main" | "master"));
+    let on_main = matches!(
+        run.check_suite.head_branch.as_deref(),
+        Some("main" | "master")
+    );
     let failed = matches!(run.conclusion.as_deref(), Some("failure" | "timed_out"));
-    (on_main && run.status == "completed" && failed)
-        .then(|| format!(" {} CI 挂了！！！！\n查看原因：{}", e.repository.full_name, run.html_url))
+    (on_main && run.status == "completed" && failed).then(|| {
+        format!(
+            " {} CI 挂了！！！！\n查看原因：{}",
+            e.repository.full_name, run.html_url
+        )
+    })
 }
 
 fn pull_request(e: PullRequestEvent) -> Option<String> {
@@ -190,7 +217,11 @@ fn pull_request(e: PullRequestEvent) -> Option<String> {
     if e.action != "opened" || is_bot(&pr.user.login) {
         return None;
     }
-    let body = pr.body.filter(|b| !b.is_empty()).map(|b| format!("{b}\n\n")).unwrap_or_default();
+    let body = pr
+        .body
+        .filter(|b| !b.is_empty())
+        .map(|b| format!("{b}\n\n"))
+        .unwrap_or_default();
     Some(format!(
         "{} 向 {} 提交了一个 Pull Request\n\n{}\n\n{} <-- {}\n\n{body}前往处理：{}",
         pr.user.login, pr.base.repo.full_name, pr.title, pr.base.label, pr.head.label, pr.html_url
@@ -214,9 +245,14 @@ pub fn message_for(event: &str, payload: Value) -> Option<String> {
     }
 }
 
-pub fn verify_request(headers: &HeaderMap, body: &[u8], secret: &str) -> Result<String, StatusCode> {
+pub fn verify_request(
+    headers: &HeaderMap,
+    body: &[u8],
+    secret: &str,
+) -> Result<String, StatusCode> {
     let header = |name: &str| headers.get(name).and_then(|v| v.to_str().ok());
-    let (Some(event), Some(signature)) = (header("x-github-event"), header("x-hub-signature-256")) else {
+    let (Some(event), Some(signature)) = (header("x-github-event"), header("x-hub-signature-256"))
+    else {
         return Err(StatusCode::BAD_REQUEST);
     };
     if !verify_github(secret, body, signature) {
@@ -225,7 +261,11 @@ pub fn verify_request(headers: &HeaderMap, body: &[u8], secret: &str) -> Result<
     Ok(event.to_string())
 }
 
-pub async fn handle(State(state): State<Arc<AppState>>, headers: HeaderMap, body: Bytes) -> (StatusCode, Json<Value>) {
+pub async fn handle(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    body: Bytes,
+) -> (StatusCode, Json<Value>) {
     let event = match verify_request(&headers, &body, &state.config.gh_webhook_secret) {
         Ok(event) => event,
         Err(status) => {

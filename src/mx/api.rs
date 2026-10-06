@@ -4,9 +4,9 @@ use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use chrono::{DateTime, Utc};
 use reqwest::Method;
-use serde::de::DeserializeOwned;
 use serde::Deserialize;
-use serde_json::{json, Value};
+use serde::de::DeserializeOwned;
+use serde_json::{Value, json};
 
 use crate::config::{Config, USER_AGENT};
 
@@ -188,7 +188,12 @@ impl MxApi {
         }
     }
 
-    async fn send(&self, method: Method, path: &str, body: Option<Value>) -> Result<(u16, Vec<u8>), ApiError> {
+    async fn send(
+        &self,
+        method: Method,
+        path: &str,
+        body: Option<Value>,
+    ) -> Result<(u16, Vec<u8>), ApiError> {
         let request_id = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .map(|d| format!("{:x}", d.as_nanos()))
@@ -279,12 +284,17 @@ impl MxApi {
     }
 
     pub async fn owner_reply(&self, comment_id: &str, text: &str) -> Result<(), ApiError> {
-        self.call(Method::POST, &format!("/comments/owner-reply/{comment_id}"), Some(json!({ "text": text })))
-            .await
+        self.call(
+            Method::POST,
+            &format!("/comments/owner-reply/{comment_id}"),
+            Some(json!({ "text": text })),
+        )
+        .await
     }
 
     pub async fn link_audit_pass(&self, id: &str) -> Result<(), ApiError> {
-        self.call(Method::PATCH, &format!("/links/audit/{id}"), None).await
+        self.call(Method::PATCH, &format!("/links/audit/{id}"), None)
+            .await
     }
 
     pub async fn link_audit_reject(&self, id: &str, reason: &str) -> Result<(), ApiError> {

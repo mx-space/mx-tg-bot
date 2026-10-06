@@ -141,7 +141,8 @@ fn collapse_newlines(input: &str) -> String {
 }
 
 fn parser(markdown: &str) -> Parser<'_> {
-    let options = Options::ENABLE_STRIKETHROUGH | Options::ENABLE_TABLES | Options::ENABLE_TASKLISTS;
+    let options =
+        Options::ENABLE_STRIKETHROUGH | Options::ENABLE_TABLES | Options::ENABLE_TASKLISTS;
     Parser::new_ext(markdown, options)
 }
 
@@ -219,7 +220,11 @@ impl Renderer {
             }
             Tag::Image { dest_url, .. } => {
                 self.link_depth -= 1;
-                let alt = if inner.is_empty() { "image".to_string() } else { inner };
+                let alt = if inner.is_empty() {
+                    "image".to_string()
+                } else {
+                    inner
+                };
                 match safe_href(&dest_url) {
                     Some(href) => format!("<a href=\"{href}\">{alt}</a>"),
                     None => alt,
@@ -277,7 +282,11 @@ pub fn strip_markdown(markdown: &str) -> String {
             Event::Text(text) | Event::Code(text) => out.push_str(&text),
             Event::SoftBreak | Event::HardBreak | Event::End(TagEnd::Item) => out.push('\n'),
             Event::End(
-                TagEnd::Paragraph | TagEnd::Heading(_) | TagEnd::CodeBlock | TagEnd::BlockQuote(_) | TagEnd::List(_),
+                TagEnd::Paragraph
+                | TagEnd::Heading(_)
+                | TagEnd::CodeBlock
+                | TagEnd::BlockQuote(_)
+                | TagEnd::List(_),
             ) => out.push_str("\n\n"),
             _ => {}
         }

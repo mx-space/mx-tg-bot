@@ -21,7 +21,11 @@ fn mx_signature_requires_both_digests() {
 fn github_signature_uses_sha256_prefix() {
     assert!(verify_github("key", BODY, &format!("sha256={SHA256}")));
     assert!(!verify_github("key", BODY, SHA256));
-    assert!(!verify_github("key", b"tampered", &format!("sha256={SHA256}")));
+    assert!(!verify_github(
+        "key",
+        b"tampered",
+        &format!("sha256={SHA256}")
+    ));
 }
 
 #[test]

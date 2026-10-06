@@ -37,7 +37,9 @@ fn detail_markup_escapes_and_keeps_three_paragraphs() {
 #[test]
 fn note_list_markup_like_ts() {
     let now = Utc.with_ymd_and_hms(2026, 10, 6, 12, 0, 0).unwrap();
-    let notes = vec![doc(r#"{"id":"1","nid":7,"title":"A-B","created_at":"2026-10-06T10:00:00Z"}"#)];
+    let notes = vec![doc(
+        r#"{"id":"1","nid":7,"title":"A-B","created_at":"2026-10-06T10:00:00Z"}"#,
+    )];
     assert_eq!(
         note_list_markup(&notes, "https://innei.in", now),
         "*文章列表*\n\n2 小时前\n[A\\-B](https://innei.in/notes/7)"
@@ -47,7 +49,9 @@ fn note_list_markup_like_ts() {
 #[test]
 fn post_list_markup_like_ts() {
     let now = Utc.with_ymd_and_hms(2026, 10, 6, 12, 0, 0).unwrap();
-    let posts = vec![doc(r#"{"id":"1","title":"T","slug":"s","category":{"slug":"c"},"created_at":"2026-10-03T12:00:00Z"}"#)];
+    let posts = vec![doc(
+        r#"{"id":"1","title":"T","slug":"s","category":{"slug":"c"},"created_at":"2026-10-03T12:00:00Z"}"#,
+    )];
     assert_eq!(
         post_list_markup(&posts, "https://innei.in", now),
         "*文章列表*\n\n3 天前\n[T](https://innei.in/posts/c/s)"
@@ -76,7 +80,10 @@ fn help_lists_mx_commands() {
 
 #[test]
 fn welcome_escapes_markdown() {
-    assert_eq!(welcome_text("@a_b", Some("一言.")), "欢迎新大佬 @a\\_b \n\n一言\\.");
+    assert_eq!(
+        welcome_text("@a_b", Some("一言.")),
+        "欢迎新大佬 @a\\_b \n\n一言\\."
+    );
     assert_eq!(welcome_text("x", None), "欢迎新大佬 x \n\n");
 }
 
