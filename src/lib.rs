@@ -1,5 +1,6 @@
 pub mod app;
 pub mod config;
+pub mod github;
 pub mod mx;
 pub mod rich_text;
 pub mod signature;
