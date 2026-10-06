@@ -263,6 +263,21 @@ impl MxApi {
         self.get(&format!("/helper/url-builder/{id}")).await
     }
 
+    pub async fn hitokoto(&self) -> Option<String> {
+        #[derive(Deserialize)]
+        struct Hitokoto {
+            hitokoto: String,
+        }
+        let res = self
+            .http
+            .get("https://v1.hitokoto.cn/")
+            .timeout(Duration::from_secs(2))
+            .send()
+            .await
+            .ok()?;
+        res.json::<Hitokoto>().await.ok().map(|h| h.hitokoto)
+    }
+
     pub async fn owner_reply(&self, comment_id: &str, text: &str) -> Result<(), ApiError> {
         self.call(Method::POST, &format!("/comments/owner-reply/{comment_id}"), Some(json!({ "text": text })))
             .await
