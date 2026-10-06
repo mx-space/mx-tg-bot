@@ -1,0 +1,82 @@
+[
+  {
+    "input": "hello world",
+    "output": "hello world"
+  },
+  {
+    "input": "**bold** and *em* and ~~del~~ and `code`",
+    "output": "<b>bold</b> and <i>em</i> and <s>del</s> and <code>code</code>"
+  },
+  {
+    "input": "# Title\n\nparagraph",
+    "output": "<b>Title</b>\nparagraph"
+  },
+  {
+    "input": "line1\nline2",
+    "output": "line1\nline2"
+  },
+  {
+    "input": "- a\n- b\n- [x] done\n- [ ] todo",
+    "output": "• a\n• b\n• ☑ done\n• ☐ todo"
+  },
+  {
+    "input": "1. one\n2. two",
+    "output": "• one\n• two"
+  },
+  {
+    "input": "```ts\nconst a = 1 < 2\n```",
+    "output": "<pre><code class=\"language-ts\">const a = 1 &lt; 2</code></pre>"
+  },
+  {
+    "input": "```\nplain & block\n```",
+    "output": "<pre>plain &amp; block</pre>"
+  },
+  {
+    "input": "> quote here",
+    "output": "<blockquote>quote here</blockquote>"
+  },
+  {
+    "input": "---",
+    "output": "———"
+  },
+  {
+    "input": "| a | b |\n|---|---|\n| 1 | 2 |",
+    "output": ""
+  },
+  {
+    "input": "<script>alert(1)</script> & <b>x</b>",
+    "output": "&lt;script&gt;alert(1)&lt;/script&gt; &amp; &lt;b&gt;x&lt;/b&gt;"
+  },
+  {
+    "input": "[ok](https://x.com) [bad](javascript:alert(1)) [tg](tg://user?id=1)",
+    "output": "<a href=\"https://x.com\">ok</a> bad <a href=\"tg://user?id=1\">tg</a>"
+  },
+  {
+    "input": "![alt](https://img.png) ![](https://img2.png)",
+    "output": "<a href=\"https://img.png\">alt</a> <a href=\"https://img2.png\">image</a>"
+  },
+  {
+    "input": "visit https://example.com now",
+    "output": "visit <a href=\"https://example.com\">https://example.com</a> now"
+  },
+  {
+    "input": "中文段落\n\n\n\n第二段",
+    "output": "中文段落\n\n第二段"
+  },
+  {
+    "input": "a & b < c > d \"q\" 'q'",
+    "output": "a &amp; b &lt; c &gt; d &quot;q&quot; &#39;q&#39;"
+  },
+  {
+    "input": "nested **bold *em* bold**",
+    "output": "nested <b>bold <i>em</i> bold</b>"
+  },
+  {
+    "input": "",
+    "output": ""
+  },
+  {
+    "input": "text with \\*escaped\\*",
+    "output": "text with *escaped*"
+  }
+]
