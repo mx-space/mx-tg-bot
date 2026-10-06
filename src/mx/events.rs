@@ -9,8 +9,8 @@ use crate::app::AppState;
 use crate::config::{MX_WATCH_CHANNEL_ID, MX_WATCH_GROUP_IDS, OWNER_ID};
 use crate::mx::api::{Aggregate, Doc, build_url};
 use crate::rich_text::{
-    MD_DEFAULT_MAX, TG_CAPTION_MAX, TG_TEXT_MAX, escape_html, md, md_to_tg_html, strip_markdown,
-    take_utf16, truncate_with_ellipsis, utf16_len,
+    MD_DEFAULT_MAX, TG_CAPTION_MAX, TG_TEXT_MAX, escape_html, escape_text, md, md_to_tg_html,
+    strip_markdown, take_utf16, truncate_with_ellipsis, utf16_len,
 };
 use crate::tg::{self, Button, Message};
 use crate::time::relative_time_from_now;
@@ -342,7 +342,7 @@ pub fn recently_create(owner: &str, recently: &RecentlyPayload) -> Message {
     };
     let link = format!(
         "<a href=\"{}\">{}</a>",
-        escape_html(&url),
+        escape_text(&url),
         escape_html(&title)
     );
     let rest = md_to_tg_html(content.replacen(&url, "", 1).trim());

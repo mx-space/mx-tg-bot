@@ -1,4 +1,6 @@
-use teloxide::RequestError;
+use teloxide::{ApiError, RequestError};
+
+use crate::rich_text::{TG_TEXT_MAX, truncate_with_ellipsis};
 use teloxide::prelude::*;
 use teloxide::types::{
     InlineKeyboardButton, InlineKeyboardMarkup, InputFile, InputMedia, InputMediaPhoto, MessageId,
@@ -84,12 +86,58 @@ fn photo_input(url: &str) -> InputFile {
     }
 }
 
+const MEDIA_GROUP_MAX: usize = 10;
+
+impl Message {
+    fn fallback(&self, err: &RequestError) -> Option<Message> {
+        let body = match (&self.body, err) {
+            (
+                Body::Photos {
+                    caption,
+                    html: true,
+                    ..
+                },
+                RequestError::Api(_),
+            ) => Body::Html(caption.clone()),
+            (Body::Photos { caption, .. }, RequestError::Api(_)) => Body::Text(caption.clone()),
+            (
+                Body::Html(text) | Body::MarkdownV2(text),
+                RequestError::Api(ApiError::CantParseEntities(_)),
+            ) => Body::Text(text.clone()),
+            _ => return None,
+        };
+        Some(Message {
+            body,
+            buttons: self.buttons.clone(),
+        })
+    }
+}
+
 pub async fn send(bot: &Bot, chat_id: i64, msg: &Message) -> Result<MessageId, RequestError> {
+    let mut current = msg.clone();
+    loop {
+        match send_once(bot, chat_id, &current).await {
+            Err(err) => match current.fallback(&err) {
+                Some(next) => {
+                    tracing::warn!("send to {chat_id} failed ({err}), retrying with fallback");
+                    current = next;
+                }
+                None => return Err(err),
+            },
+            ok => return ok,
+        }
+    }
+}
+
+async fn send_once(bot: &Bot, chat_id: i64, msg: &Message) -> Result<MessageId, RequestError> {
     let chat = ChatId(chat_id);
     let markup = keyboard(&msg.buttons);
     let sent = match &msg.body {
         Body::Text(text) | Body::Html(text) | Body::MarkdownV2(text) => {
-            let mut req = bot.send_message(chat, text);
+            let mut req = match &msg.body {
+                Body::Text(_) => bot.send_message(chat, truncate_with_ellipsis(text, TG_TEXT_MAX)),
+                _ => bot.send_message(chat, text),
+            };
             req = match &msg.body {
                 Body::Html(_) => req.parse_mode(ParseMode::Html),
                 Body::MarkdownV2(_) => req.parse_mode(ParseMode::MarkdownV2),
@@ -119,16 +167,20 @@ pub async fn send(bot: &Bot, chat_id: i64, msg: &Message) -> Result<MessageId, R
             caption,
             html,
         } => {
-            let media = urls.iter().enumerate().map(|(i, url)| {
-                let mut photo = InputMediaPhoto::new(photo_input(url));
-                if i == 0 {
-                    photo = photo.caption(caption);
-                    if *html {
-                        photo = photo.parse_mode(ParseMode::Html);
+            let media = urls
+                .iter()
+                .take(MEDIA_GROUP_MAX)
+                .enumerate()
+                .map(|(i, url)| {
+                    let mut photo = InputMediaPhoto::new(photo_input(url));
+                    if i == 0 {
+                        photo = photo.caption(caption);
+                        if *html {
+                            photo = photo.parse_mode(ParseMode::Html);
+                        }
                     }
-                }
-                InputMedia::Photo(photo)
-            });
+                    InputMedia::Photo(photo)
+                });
             bot.send_media_group(chat, media).await?[0].id
         }
     };

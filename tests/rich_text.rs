@@ -59,3 +59,11 @@ fn strip_markdown_keeps_text_and_paragraph_breaks() {
         "Title\n\nbold link\n\nimg"
     );
 }
+
+#[test]
+fn link_href_escapes_quotes() {
+    assert_eq!(
+        md_to_tg_html("[a](http://x\"y)"),
+        "<a href=\"http://x&quot;y\">a</a>"
+    );
+}

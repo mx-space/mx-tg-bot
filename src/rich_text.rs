@@ -17,7 +17,7 @@ pub fn escape_html(input: &str) -> String {
     out
 }
 
-fn escape_text(input: &str) -> String {
+pub fn escape_text(input: &str) -> String {
     let mut out = String::with_capacity(input.len());
     for c in input.chars() {
         match c {
@@ -75,7 +75,7 @@ fn safe_href(href: &str) -> Option<String> {
     ["http:", "https:", "tg:", "mailto:"]
         .iter()
         .any(|scheme| lower.starts_with(scheme))
-        .then(|| escape_html(trimmed))
+        .then(|| escape_text(trimmed))
 }
 
 fn autolink(text: &str) -> String {

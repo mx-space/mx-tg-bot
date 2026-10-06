@@ -80,7 +80,7 @@ Reply to a forwarded comment in the owner chat to answer it on the site. Link ap
 
 ## Deployment
 
-The `Dockerfile` builds a static musl binary into a `scratch` image (~10 MB). Railway runs it via `railway.json` (`/mx-tg-bot`).
+The `Dockerfile` builds a static musl binary into a `scratch` image (~10 MB). Railway builds it with the Dockerfile builder and `restartPolicyType: ALWAYS` (`railway.json`).
 
 If `getWebhookInfo` reports pending updates for 3 checks in a row (5 min apart), the bot exits so Railway restarts it and replays the backlog.
 
