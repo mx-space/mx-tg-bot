@@ -1,27 +1,11 @@
-FROM node:22.23.2-alpine AS builder
+FROM rust:1-alpine AS builder
+RUN apk add --no-cache musl-dev
 WORKDIR /app
-
-RUN apk upgrade --no-cache -U && \
-  apk add --no-cache git
-
-RUN npm i -g pnpm
-
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json tsdown.config.ts ./
+COPY Cargo.toml Cargo.lock ./
 COPY src src
-COPY packages packages
-COPY app.config.ts app.config.ts
+RUN cargo build --release --locked
 
-RUN pnpm install --frozen-lockfile --prefer-frozen-lockfile
-RUN npm run build
-
-FROM node:22.23.2-alpine
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV TZ=Asia/Shanghai
-
-COPY --from=builder /app/dist dist
-
-EXPOSE 8888
+FROM scratch
+COPY --from=builder /app/target/release/mx-tg-bot /mx-tg-bot
 EXPOSE 8080
-CMD ["node", "dist/server.js"]
+ENTRYPOINT ["/mx-tg-bot"]

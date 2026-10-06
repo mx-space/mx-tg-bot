@@ -1,168 +1,88 @@
 # Mix Space Telegram Bot
 
-A Telegram Bot service built with Fastify + Telegraf, focused on Mix Space notifications, comment interactions, GitHub webhook forwarding, and Bilibili live alerts.
+A Telegram bot written in Rust that forwards Mix Space and GitHub notifications and supports comment replies and friend-link review from Telegram.
 
 This project was migrated from [imx-bot](https://github.com/Innei/imx-bot) and continues to evolve.
 
 ## Features
 
-- Mix Space webhook subscriptions: forward posts, notes, comments, status updates, likes, and link applications to Telegram groups
-- Telegram commands: fetch posts/notes, query statistics, and assist with comment replies
-- GitHub webhook integration: Push, Issue, PR, Release, and CI failure notifications
-- Bilibili live polling: detect stream start and notify groups
-- Scheduled jobs: morning and evening messages
+- Mix Space webhook subscriptions: posts, notes, comments, says, recently, likes, and link applications forwarded to Telegram groups
+- Telegram commands: fetch posts/notes, query statistics, reply to comments, approve/reject link applications
+- GitHub webhook integration: push, issue, PR, release, and CI failure notifications
 - HTTP service: health checks and webhook endpoints
 
 ## Tech Stack
 
-- Runtime: Node.js (>= 16.20.0)
-- Language: TypeScript
-- Web framework: Fastify
-- Telegram SDK: Telegraf
-- Data source: `@mx-space/api-client` + `@mx-space/webhook`
-- Scheduler: `cron`
-- Package manager: pnpm (`pnpm@9.15.9`)
+- Language: Rust (edition 2024)
+- Runtime: tokio
+- Telegram: teloxide (long polling)
+- HTTP server: axum
+- HTTP client: reqwest (rustls)
+- Markdown: pulldown-cmark
 
 ## Project Structure
 
 ```text
 src/
-  app.ts                     # Fastify app composition; initializes bot and modules
-  server.ts                  # Entry point; loads .env and starts Fastify
-  app.config.ts              # appConfig re-export
-  modules/
-    loader.ts                # Auto-loads module directories and registers plugins
-    mx-space/                # Mix Space logic (webhooks, commands, event forwarding)
-    github/                  # GitHub webhook handling
-    bilibili/                # Bilibili live polling and notifications
-  bot/
-    index.ts                 # Telegraf initialization and /help command
-  routes/
-    root.ts                  # / and /health/check
+  main.rs            entry: config, dispatcher, HTTP server, polling watchdog
+  app.rs             shared AppState
+  config.rs          env vars and chat-id constants
+  server.rs          axum router
+  github.rs          GitHub webhook
+  tg.rs              outbound Telegram message model
+  rich_text.rs       Markdown → Telegram HTML / MarkdownV2 escaping
+  signature.rs       webhook HMAC verification
+  ttl_map.rs         bounded TTL map for reply targets
+  watchdog.rs        exits when polling stalls so the platform restarts it
+  mx/
+    api.rs           Mix Space v3 API client
+    events.rs        Mix Space event → Telegram message
+    webhook.rs       /mx/webhook
+    commands.rs      Telegram commands and owner replies
+    link_audit.rs    friend-link approve/reject buttons
+tests/               integration tests (fixtures generated from the former TS implementation)
 ```
 
 ## Local Development
 
-### 1) Install Dependencies
+1. Copy env: `cp .env.example .env` and fill in values
+2. Run: `cargo run`
+3. Test: `cargo test`
 
-```bash
-pnpm install
-```
+Use a separate test bot token locally. Two pollers on the same token conflict (HTTP 409) and will kick the production bot.
 
-### 2) Configure Environment Variables
+### Environment Variables
 
-The service loads `.env` from the repository root via `dotenv` and validates required values with Zod at startup.
-
-Create `.env`:
-
-```bash
-cp .env.example .env
-```
-
-If `.env.example` does not exist in the repo, create `.env` manually with:
-
-```bash
-MX_SPACE_TOKEN=
-TG_BOT_TOKEN=
-GH_WEBHOOK_SECRET=
-MX_SPACE_API_ENDPOINT=
-MX_SPACE_GATEWAY_ENDPOINT=
-MX_SPACE_WEBHOOK_SECRET=
-
-# Optional
-PORT=3000
-SERVER_HOSTNAME=127.0.0.1
-```
-
-Variable reference:
-
-- `MX_SPACE_TOKEN`: Mix Space API access token
-- `TG_BOT_TOKEN`: Telegram Bot token (from BotFather)
-- `GH_WEBHOOK_SECRET`: GitHub webhook secret
-- `MX_SPACE_API_ENDPOINT`: Mix Space API endpoint (URL)
-- `MX_SPACE_GATEWAY_ENDPOINT`: Mix Space Gateway endpoint (URL)
+- `TG_BOT_TOKEN`: Telegram bot token (from BotFather)
+- `MX_SPACE_API_ENDPOINT`: Mix Space v3 API base, e.g. `https://mx.innei.in/api/v3`
+- `MX_SPACE_TOKEN`: Mix Space API key (sent as `x-api-key`)
 - `MX_SPACE_WEBHOOK_SECRET`: Mix Space webhook secret
+- `GH_WEBHOOK_SECRET`: GitHub webhook secret
 - `PORT`: service port (default `3000`)
-- `SERVER_HOSTNAME`: bind host (default `127.0.0.1`)
+- `SERVER_HOSTNAME`: bind host (default `127.0.0.1`; use `0.0.0.0` in containers)
+- `RUST_LOG`: log filter (default `info`)
 
-### 3) Run the Service
+## HTTP Endpoints
 
-Development mode (watch):
+- `GET /`, `GET /health/check`: health checks
+- `POST /mx/webhook`: Mix Space webhook (HMAC sha1 + sha256 over the raw body)
+- `POST /gh/webhook`: GitHub webhook (`X-Hub-Signature-256`)
 
-```bash
-pnpm dev
-```
+## Telegram Commands
 
-Run directly:
-
-```bash
-pnpm start
-```
-
-Build and run production:
-
-```bash
-pnpm build
-pnpm start:prod
-```
-
-## NPM Scripts
-
-- `pnpm dev`: development mode (`tsx watch`)
-- `pnpm build`: compile TypeScript
-- `pnpm typecheck`: type checking
-- `pnpm lint`: ESLint with auto-fix
-- `pnpm format`: format with Prettier
-- `pnpm start`: run `src/server.ts` directly
-- `pnpm start:prod`: run compiled output
-
-## Webhook and HTTP Endpoints
-
-Health checks:
-
-- `GET /`
-- `GET /health/check`
-
-Webhook callbacks:
-
-- `POST /mx/webhook`: Mix Space webhook (must match `MX_SPACE_WEBHOOK_SECRET`)
-- `POST /gh/webhook`: GitHub webhook (must match `GH_WEBHOOK_SECRET`)
-
-## Telegram Behavior
-
-### Built-in Commands
-
-- `/start`: basic greeting
-- `/help`: auto-generated command help (grouped by module)
-
-### Mix Space Commands (Registered at Runtime)
-
+- `/start`, `/help`
 - `/mx_get_detail <post|note> [offset]`
 - `/mx_get_notes [page]`
 - `/mx_get_posts [page]`
 - `/mx_stat`
 
-### Automated Messages
+Reply to a forwarded comment in the owner chat to answer it on the site. Link applications arrive with ✅/❌ buttons; ❌ asks for a reason by force-reply.
 
-- Mix Space event forwarding to configured groups
-- GitHub event forwarding to configured groups
-- Bilibili live stream alerts
-- Scheduled morning (06:00) / evening (22:00) messages
+## Deployment
 
-## Deployment Notes
+The `Dockerfile` builds a static musl binary into a `scratch` image (~10 MB). Railway runs it via `railway.json` (`/mx-tg-bot`).
 
-- Deploy in a public environment reachable by Mix Space and GitHub callbacks
-- Expose `POST /mx/webhook` and `POST /gh/webhook` through a reverse proxy (Nginx/Caddy)
-- Ensure server timezone matches your expected cron schedule
-- Keep sensitive variables in secure environment config; never commit `.env`
-- Use a process supervisor (systemd / pm2 / container orchestration)
-
-## Troubleshooting
-
-- Startup fails on env validation: check `.env` completeness and URL formats
-- Telegram messages not sent: verify `TG_BOT_TOKEN`, group IDs, and bot permissions
-- GitHub/Mix Space webhook failures: verify secrets first, then callback URL and proxy logs
-- No Bilibili alert: confirm non-development mode (polling is disabled in dev) and live room ID
+If `getWebhookInfo` reports pending updates for 3 checks in a row (5 min apart), the bot exits so Railway restarts it and replays the backlog.
 
 ## License
 

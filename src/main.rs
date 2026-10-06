@@ -1,3 +1,4 @@
+use std::io::IsTerminal;
 use std::sync::Arc;
 
 use mx_tg_bot::app::AppState;
